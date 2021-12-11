@@ -34,6 +34,7 @@ import {
   deletePostData,
   updatePostData,
 } from "@/api/posts";
+import { PostDataType } from "@/types/types";
 
 export default defineComponent({
   name: "MainPage",
@@ -45,11 +46,11 @@ export default defineComponent({
   setup() {
     const router = useRouter();
     const store = useStore();
-    const postItems = ref([]);
+    const postItems = ref<PostDataType[]>([]);
     const settingState = ref(false);
     const updateStatus = ref(false);
     const isLoading = ref(false);
-    const isEditing = ref(undefined);
+    const isEditing = ref(false);
 
     // 포스트 조회
     fetchPostData();
@@ -116,6 +117,11 @@ export default defineComponent({
         }
       }
     }
+    // 수정 시작 버튼 클릭
+    function startEditing(i: number) {
+      postItems.value[i].isEditing = true;
+      isEditing.value = true;
+    }
 
     return {
       router,
@@ -128,6 +134,7 @@ export default defineComponent({
       fetchPostData,
       createNewPost,
       deletePost,
+      startEditing,
     };
   },
 });
