@@ -51,6 +51,9 @@ export default defineComponent({
     const isLoading = ref(false);
     const isEditing = ref(undefined);
 
+    // 포스트 조회
+    fetchPostData();
+
     // 전체 포스트 조회
     async function fetchPostData() {
       try {
@@ -70,7 +73,31 @@ export default defineComponent({
         }
       }
     }
-    fetchPostData();
+
+    // 포스트 생성
+    async function createNewPost() {
+      try {
+        // 디폴트 포스트를 생성
+        await addPostData({
+          title: "",
+          contents: "",
+          position: [{ width: "3", height: "3", x: "0", y: "0" }],
+          isEditing: true,
+        });
+        // Refresh (gridStack reload)
+        await this.fetchPostData();
+        this.$router.go();
+      } catch (error) {
+        if (error.response.status === 400) {
+          alert("새로운 포스트가 이미 존재합니다.");
+        } else if (error.response.status === 500) {
+          alert(
+            "서버에 문제가 있어 포스트를 생성하지 못했습니다. 잠시 후 다시 시도해주세요."
+          );
+          this.$router.go();
+        }
+      }
+    }
 
     return {
       router,
