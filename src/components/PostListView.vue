@@ -63,7 +63,7 @@
 
 <script lang="ts">
 import { defineComponent, ref, onUpdated, toRefs, PropType } from "vue";
-import { Position, PostDataType } from "@/types/types";
+import { Position, PostDataType, PostItemType } from "@/types/types";
 import "gridstack/dist/gridstack.min.css";
 import { GridStack, GridStackNode } from "gridstack";
 import "gridstack/dist/h5/gridstack-dd-native";
@@ -121,17 +121,16 @@ export default defineComponent({
       }
     }
     const item = ref<HTMLDivElement[]>();
-    function emitFinishEditing(i: number, postItem: PostDataType) {
+    function emitFinishEditing(i: number, postItem: PostItemType) {
       if (item.value) {
         const postData: PostDataType = {
           title: currentEditingTitle.value,
           contents: currentEditingContents.value,
           position: {
-            width: item.value[i].getAttribute("gs-w"),
-            height: item.value[i].getAttribute("gs-h"),
-            x: item.value[i].getAttribute("gs-x"),
-            y: item.value[i].getAttribute("gs-y"),
-            id: item.value.el?.id,
+            width: item.value[i].getAttribute("gs-w") as string,
+            height: item.value[i].getAttribute("gs-h") as string,
+            x: item.value[i].getAttribute("gs-x") as string,
+            y: item.value[i].getAttribute("gs-y") as string,
           },
           isEditing: false,
         };

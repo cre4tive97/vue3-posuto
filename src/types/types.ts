@@ -43,8 +43,16 @@ export interface Position {
 export interface PostDataType {
   title: string;
   contents: string;
-  position: Position[];
+  position: Position[] | Position;
   isEditing: boolean;
+}
+
+export interface PostItemType extends PostDataType {
+  createdAt: string;
+  createdBy: string;
+  updatedAt: string;
+  __v: number;
+  _id: string;
 }
 
 export namespace VueEvent {

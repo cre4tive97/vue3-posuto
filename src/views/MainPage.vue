@@ -34,7 +34,7 @@ import {
   deletePostData,
   updatePostData,
 } from "@/api/posts";
-import { PostDataType } from "@/types/types";
+import { PostDataType, PostItemType, Position } from "@/types/types";
 
 export default defineComponent({
   name: "MainPage",
@@ -46,7 +46,7 @@ export default defineComponent({
   setup() {
     const router = useRouter();
     const store = useStore();
-    const postItems = ref<PostDataType[]>([]);
+    const postItems = ref<PostItemType[]>([]);
     const settingState = ref(false);
     const updateStatus = ref(false);
     const isLoading = ref(false);
@@ -124,7 +124,7 @@ export default defineComponent({
     }
     // 수정 완료, 데이터 저장
     async function finishEditing(
-      postItem: PostDataType,
+      postItem: PostItemType,
       postData: PostDataType
     ) {
       const id = postItem._id;
@@ -172,11 +172,11 @@ export default defineComponent({
     }
 
     // 포지션 변경시 전체 포스트 위치 저장
-    async function savePosition(positionArray) {
+    async function savePosition(positionArray: Position[]) {
       // custom event로 받아온 포지션 배열 내부 객체의 id Key의 value를 배열에 담음
       let positionId = positionArray.map((position) => position.id);
       // 서버에서 받아온 포스트 데이터와 custom event로 받아온 포지션 데이터를 비교해 id가 같은 배열을 리턴함.
-      let changedPostItems = this.postItems.filter((item) => {
+      let changedPostItems = postItems.value.filter((item) => {
         return positionId.includes(item._id) ? item : null;
       });
       // 이중 for문 쓰기 싫은데, 이틀간 고민해도 마땅한 코드가 생각나지 않음..
@@ -184,7 +184,7 @@ export default defineComponent({
       positionArray.forEach((positionValue) => {
         changedPostItems.forEach((item) => {
           if (item._id == positionValue.id) {
-            item.position[0] = positionValue;
+            if (Array.isArray(item.position)) item.position[0] = positionValue;
           }
         });
       });
@@ -209,6 +209,8 @@ export default defineComponent({
       createNewPost,
       deletePost,
       startEditing,
+      finishEditing,
+      savePosition,
     };
   },
 });
