@@ -33,10 +33,10 @@ export interface SignupSuccess {
 }
 
 export interface Position {
-  width: string;
-  height: string;
-  x: string;
-  y: string;
+  width?: string;
+  height?: string;
+  x?: string;
+  y?: string;
 }
 
 export interface PostDataType {

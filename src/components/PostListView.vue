@@ -63,9 +63,9 @@
 
 <script lang="ts">
 import { defineComponent, ref, onUpdated, toRefs, PropType } from "vue";
-import { PostDataType } from "@/types/types";
+import { Position, PostDataType } from "@/types/types";
 import "gridstack/dist/gridstack.min.css";
-import { GridStack } from "gridstack";
+import { GridItemHTMLElement, GridStack, GridStackElement, GridStackNode, GridStackPosition } from "gridstack";
 import "gridstack/dist/h5/gridstack-dd-native";
 
 export default defineComponent({
@@ -81,7 +81,7 @@ export default defineComponent({
     },
   },
   setup(props, { emit }) {
-    const grid = ref(undefined);
+    const grid = ref<GridStack>();
     const currentEditingTitle = ref("");
     const currentEditingContents = ref("");
     let { postItems, isEditing } = toRefs(props);
@@ -143,6 +143,61 @@ export default defineComponent({
       currentEditingTitle.value = "";
       currentEditingContents.value = "";
     }
+
+    // GridStack 세팅.
+    function setGrid() {
+      //Grid init
+      grid.value = GridStack.init({
+        float: true,
+        cellHeight: "50px",
+        minRow: 13,
+        resizable: {
+          handles: "e,se,s,w",
+        },
+        alwaysShowResizeHandle:
+          /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+            navigator.userAgent
+          ),
+      });
+      grid.value.on("change", (event, items) => {
+        // 수정버튼 클릭시 Form에 내용 작성할 경우 또한 'change'로 감지됨.
+        // 모든 수정버튼이 비활성화 되었을 때에만 custom event 보냄.
+        if (isEditing.value === false || isEditing.value === undefined) {
+          emit("save:position", setCurrentPositionValue(items));
+        }
+      });
+      if (isEditing.value === true) {
+        // 수정버튼 활성화시 포스트 이동/리사이즈 비활성화
+        grid.value.enableMove(false);
+        grid.value.enableResize(false);
+      } else {
+        // 수정버튼 비활성화시 포스트 이동/리사이즈 활성화
+        grid.value.enableMove(true);
+        grid.value.enableResize(true);
+      }
+      // 드래그 시작시 커서 변경
+      grid.value.on("dragstart", () => {
+        document.body.style.cursor = "grabbing";
+      });
+      // 드래그 종료시 커서 변경
+      grid.value.on("dragstop", () => {
+        document.body.style.cursor = "auto";
+      });
+    }
+
+    function setCurrentPositionValue(items :GridStackNode[]) {
+      let position = [] as Position[]
+      items.forEach(item  => {
+        position.push({
+          width: item.w?.toString(),
+          height: item.h?.toString(),
+          x: item.x?.toString(),
+          y: item.y?.toString(),          
+        });
+      });
+      return position;
+    }
+
     return {
       grid,
       currentEditingTitle,
@@ -157,6 +212,8 @@ export default defineComponent({
       item,
       emitFinishEditing,
       initCurrentEditingPost,
+      setGrid
+      setCurrentPositionValue,
     };
   },
 });
