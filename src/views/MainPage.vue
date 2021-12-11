@@ -98,6 +98,24 @@ export default defineComponent({
         }
       }
     }
+    // 포스트 삭제
+    async function deletePost(postId: string) {
+      try {
+        await deletePostData(postId);
+        fetchPostData();
+      } catch (error: any) {
+        if (error.response.status === 400) {
+          alert("포스트를 삭제할 수 없습니다.");
+        } else if (error.response.status === 404) {
+          alert("포스트를 찾을 수 없습니다.");
+        } else if (error.response.status === 500) {
+          alert(
+            "서버에 문제가 있어 포스트를 삭제하지 못했습니다. 잠시 후 다시 시도해주세요."
+          );
+          router.go(0);
+        }
+      }
+    }
 
     return {
       router,
@@ -109,6 +127,7 @@ export default defineComponent({
       isEditing,
       fetchPostData,
       createNewPost,
+      deletePost,
     };
   },
 });
