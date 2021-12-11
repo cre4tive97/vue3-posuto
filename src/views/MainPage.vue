@@ -122,6 +122,80 @@ export default defineComponent({
       postItems.value[i].isEditing = true;
       isEditing.value = true;
     }
+    // 수정 완료, 데이터 저장
+    async function finishEditing(
+      postItem: PostDataType,
+      postData: PostDataType
+    ) {
+      const id = postItem._id;
+      try {
+        // 기존 제목과 컨텐츠 변경이 없을경우
+        if (postData.title === "" && postData.contents === "") {
+          postData.title = postItem.title;
+          postData.contents = postItem.contents;
+          await updatePostData(id, postData);
+          fetchPostData();
+          isEditing.value = false;
+
+          // 기존 컨텐츠만 변경되었을 경우
+        } else if (postData.title === "" && postData.contents !== "") {
+          postData.title = postItem.title;
+          await updatePostData(id, postData);
+          fetchPostData();
+          isEditing.value = false;
+
+          // 기존 제목만 변경되었을 경우
+        } else if (postData.title !== "" && postData.contents === "") {
+          postData.contents = postItem.contents;
+          await updatePostData(id, postData);
+          fetchPostData();
+          isEditing.value = false;
+
+          // 기존 제목과 컨텐츠 모두 변경되었을 경우
+        } else if (postData.title !== "" && postData.contents !== "") {
+          await updatePostData(id, postData);
+          fetchPostData();
+          isEditing.value = false;
+        }
+        // switch문 적용 가능?
+      } catch (error: any) {
+        if (error.response.status === 400) {
+          alert("이미 같은 포스트가 존재합니다.");
+        } else if (error.response.status === 404) {
+          alert("포스트를 찾을 수 없습니다.");
+        } else if (error.response.status === 500) {
+          alert(
+            "서버에 문제가 있어 포스트를 수정하지 못했습니다. 잠시 후 다시 시도해주세요."
+          );
+        }
+      }
+    }
+
+    // 포지션 변경시 전체 포스트 위치 저장
+    async function savePosition(positionArray) {
+      // custom event로 받아온 포지션 배열 내부 객체의 id Key의 value를 배열에 담음
+      let positionId = positionArray.map((position) => position.id);
+      // 서버에서 받아온 포스트 데이터와 custom event로 받아온 포지션 데이터를 비교해 id가 같은 배열을 리턴함.
+      let changedPostItems = this.postItems.filter((item) => {
+        return positionId.includes(item._id) ? item : null;
+      });
+      // 이중 for문 쓰기 싫은데, 이틀간 고민해도 마땅한 코드가 생각나지 않음..
+      // positionArray와 changedPostItems의 객체의 id를 비교해 changedPostItems의 position 수정함.
+      positionArray.forEach((positionValue) => {
+        changedPostItems.forEach((item) => {
+          if (item._id == positionValue.id) {
+            item.position[0] = positionValue;
+          }
+        });
+      });
+      try {
+        await changedPostItems.forEach((item) => {
+          updatePostData(item._id, item);
+        });
+      } catch (error) {
+        console.log(error);
+      }
+    }
 
     return {
       router,

@@ -37,6 +37,7 @@ export interface Position {
   height?: string;
   x?: string;
   y?: string;
+  id?: string;
 }
 
 export interface PostDataType {

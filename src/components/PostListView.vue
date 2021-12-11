@@ -123,7 +123,7 @@ export default defineComponent({
     const item = ref<HTMLDivElement[]>();
     function emitFinishEditing(i: number, postItem: PostDataType) {
       if (item.value) {
-        const postData = {
+        const postData: PostDataType = {
           title: currentEditingTitle.value,
           contents: currentEditingContents.value,
           position: {
@@ -131,6 +131,7 @@ export default defineComponent({
             height: item.value[i].getAttribute("gs-h"),
             x: item.value[i].getAttribute("gs-x"),
             y: item.value[i].getAttribute("gs-y"),
+            id: item.value.el?.id,
           },
           isEditing: false,
         };
@@ -196,6 +197,7 @@ export default defineComponent({
           height: item.h?.toString(),
           x: item.x?.toString(),
           y: item.y?.toString(),
+          id: item.el?.id,
         });
       });
       return position;

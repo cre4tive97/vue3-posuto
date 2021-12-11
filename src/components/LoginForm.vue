@@ -33,11 +33,12 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, computed } from "vue";
+import { defineComponent, computed, reactive, toRefs } from "vue";
 import { ActionTypes } from "@/store/actions";
 import { validateUsername } from "@/utils/validation";
 import { useStore } from "@/store/index";
 import { useRouter } from "vue-router";
+import { LoginType } from "@/types/types";
 
 export default defineComponent({
   name: "LoginForm",
@@ -46,18 +47,26 @@ export default defineComponent({
     // store, router
     const store = useStore();
     const router = useRouter();
+
     // data
-    const username = ref("");
-    const password = ref("");
+    const loginInfo: LoginType = reactive({
+      username: "",
+      password: "",
+    });
+    const loginInfoAsRefs = toRefs(loginInfo);
+
     // computed
-    const isUsernameValid = computed(() => validateUsername(username.value));
+    const isUsernameValid = computed(() =>
+      validateUsername(loginInfo.username)
+    );
+
     // methods
     // 폼 제출
     async function submitForm() {
       try {
         await store.dispatch(ActionTypes.LOGIN_USER, {
-          username: username.value,
-          password: password.value,
+          username: loginInfo.username,
+          password: loginInfo.password,
         });
         router.push("/main");
       } catch (error: any) {
@@ -68,16 +77,16 @@ export default defineComponent({
         initForm();
       }
     }
+
     function initForm() {
-      username.value = "";
-      password.value = "";
+      loginInfo.username = "";
+      loginInfo.password = "";
     }
 
     return {
-      username,
-      password,
       isUsernameValid,
       submitForm,
+      loginInfoAsRefs,
     };
   },
 });
