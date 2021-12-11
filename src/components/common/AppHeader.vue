@@ -16,37 +16,8 @@
   </div>
 </template>
 
-//
 <script lang="ts">
-// import Vue from "vue";
-// import { mapState, mapGetters, mapMutations } from "vuex";
-// import AppLogo from "@/components/common/AppLogo.vue";
-// import { deleteCookie } from "@/utils/cookies.js";
-// export default Vue.extend({
-//   name: "AppHeader",
-//   components: {
-//     AppLogo,
-//   },
-//   computed: {
-//     ...mapState(["nickname"]),
-//     ...mapGetters(["isLogin"]),
-//   },
-//   methods: {
-//     ...mapMutations(["clearToken", "clearNickname"]),
-//     logout() {
-//       this.clearToken();
-//       this.clearNickname();
-//       deleteCookie("posuto_user");
-//       deleteCookie("posuto_auth");
-//       this.$router.push("/login");
-//     },
-//   },
-// });
-//
-</script>
-
-<script lang="ts">
-import { defineComponent, ref, computed } from "vue";
+import { defineComponent, computed } from "vue";
 import AppLogo from "@/components/common/AppLogo.vue";
 import { deleteCookie } from "@/utils/cookies.js";
 import { useRouter } from "vue-router";
@@ -65,8 +36,8 @@ export default defineComponent({
     const router = useRouter();
 
     function logout() {
-      store.commit("clearToken");
-      store.commit("clearNickname");
+      store.commit(MutationTypes.CLEAR_TOKEN);
+      store.commit(MutationTypes.CLEAR_NICKNAME);
       deleteCookie("posuto_user");
       deleteCookie("posuto_auth");
       router.push("/login");
