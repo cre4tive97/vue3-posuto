@@ -7,7 +7,7 @@
           class="color__btn"
           v-for="(color, i) in colors"
           :key="i"
-          @click="selectPostColor(color.color)"
+          @click="selectPostColor(colors.color)"
         >
           <div
             class="color__circle"
@@ -21,30 +21,33 @@
 </template>
 
 <script lang="ts">
+import { defineComponent } from "vue";
 import { ActionTypes } from "@/store/actions";
-import Vue from "vue";
-export default Vue.extend({
+import { useStore } from "@/store";
+
+const colors = [
+  { color: "#FEC0CA", name: "Pink" },
+  { color: "#2dfff1", name: "Mint" },
+  { color: "#96d5ff", name: "Skyblue" },
+  { color: "#f2f486", name: "Yellow" },
+  { color: "#F5F5F6", name: "White" },
+  { color: "#a5ffb9", name: "Green" },
+  { color: "#DAC6AE", name: "Beige" },
+  { color: "#ff7d3d", name: "Orange" },
+];
+
+export default defineComponent({
   name: "AppSetting",
-  data() {
-    return {
-      colors: [
-        { color: "#FEC0CA", name: "Pink" },
-        { color: "#2dfff1", name: "Mint" },
-        { color: "#96d5ff", name: "Skyblue" },
-        { color: "#f2f486", name: "Yellow" },
-        { color: "#F5F5F6", name: "White" },
-        { color: "#a5ffb9", name: "Green" },
-        { color: "#DAC6AE", name: "Beige" },
-        { color: "#ff7d3d", name: "Orange" },
-      ],
-    };
-  },
-  methods: {
-    // LocalStorage에 선택한 post color를 저장하고 actions dispatch
-    selectPostColor(color: string) {
+  setup() {
+    const store = useStore();
+    function selectPostColor(color: string) {
       localStorage.setItem("post_color", color);
-      this.$store.dispatch(ActionTypes.GET_POSTCOLOR);
-    },
+      store.dispatch(ActionTypes.GET_POSTCOLOR);
+    }
+    return {
+      colors,
+      selectPostColor,
+    };
   },
 });
 </script>
