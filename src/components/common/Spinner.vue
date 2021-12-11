@@ -5,9 +5,10 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
+import { defineComponent } from "vue";
 import SquareLoader from "vue-spinner/src/SquareLoader.vue";
-export default Vue.extend({
+export default defineComponent({
+  name: "Spinner",
   components: {
     SquareLoader,
   },
