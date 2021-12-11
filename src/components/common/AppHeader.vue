@@ -51,6 +51,7 @@ import AppLogo from "@/components/common/AppLogo.vue";
 import { deleteCookie } from "@/utils/cookies.js";
 import { useRouter } from "vue-router";
 import { useStore } from "@/store/index";
+import { MutationTypes } from "@/store/mutations";
 
 export default defineComponent({
   name: "AppHeader",
@@ -58,7 +59,7 @@ export default defineComponent({
     AppLogo,
   },
   setup() {
-    const store = useStore(key);
+    const store = useStore();
     const nickname = computed(() => store.state.nickname);
     const isLogin = computed(() => store.getters.isLogin);
     const router = useRouter();

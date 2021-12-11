@@ -1,9 +1,12 @@
 import { State } from "@/store/state";
+import { GetterTree } from "vuex";
 
-export const getters = {
-  isLogin(state: State): boolean {
+export type Getters = {
+  isLogin(state: State): boolean;
+};
+
+export const getters: GetterTree<State, State> & Getters = {
+  isLogin(state) {
     return state.nickname !== "";
   },
 };
-
-export type Getters = typeof getters;

@@ -1,42 +1,41 @@
+import { State } from "@/store/state";
+import { MutationTree } from "vuex";
+
 export enum MutationTypes {
-  setUserToken = "setUserToken",
-  setUserNickname = "setUserNickname",
-  clearToken = "clearToken",
-  clearNickname = "clearNickname",
-  setPostColor = "setPostColor",
-  setPostEmptyStatus = "setPostEmptyStatus",
+  SET_USER_TOKEN = "SET_USER_TOKEN",
+  SET_USER_NICKNAME = "SET_USER_NICKNAME",
+  CLEAR_TOKEN = "CLEAR_TOKEN",
+  CLEAR_NICKNAME = "CLEAR_NICKNAME",
+  SET_POST_COLOR = "SET_POST_COLOR",
+  SET_POST_EMPTY_STATUS = "SET_POST_EMPTY_STATUS",
 }
 
-import { RootState } from "./state";
+export type Mutations<S = State> = {
+  [MutationTypes.SET_USER_TOKEN](state: S, token: string): void;
+  [MutationTypes.SET_USER_NICKNAME](state: State, nickname: string): void;
+  [MutationTypes.CLEAR_TOKEN](state: State): void;
+  [MutationTypes.CLEAR_NICKNAME](state: State): void;
+  [MutationTypes.SET_POST_COLOR](state: State, color: string): void;
+  [MutationTypes.SET_POST_EMPTY_STATUS](state: State, isEmpty: boolean): void;
+};
 
-export enum MutationsType {
-  setUserToken = "setUserToken",
-  setUserNickname = "setUserNickname",
-  clearToken = "clearToken",
-  clearNickname = "clearNickname",
-  setPostColor = "setPostColor",
-  setPostEmptyStatus = "setPostEmptyStatus",
-}
-
-export const mutations = {
-  [MutationsType.setUserToken](state: RootState, token: string): void {
+export const mutations: MutationTree<State> & Mutations = {
+  [MutationTypes.SET_USER_TOKEN](state, token): void {
     state.token = token;
   },
-  [MutationsType.setUserNickname](state: RootState, nickname: string): void {
+  [MutationTypes.SET_USER_NICKNAME](state, nickname): void {
     state.nickname = nickname;
   },
-  [MutationsType.clearToken](state: RootState): void {
+  [MutationTypes.CLEAR_TOKEN](state): void {
     state.token = "";
   },
-  [MutationsType.clearNickname](state: RootState): void {
+  [MutationTypes.CLEAR_NICKNAME](state): void {
     state.nickname = "";
   },
-  [MutationsType.setPostColor](state: RootState, color: string): void {
+  [MutationTypes.SET_POST_COLOR](state, color): void {
     state.postColor = color;
   },
-  [MutationsType.setPostEmptyStatus](state: RootState, isEmpty: boolean): void {
+  [MutationTypes.SET_POST_EMPTY_STATUS](state, isEmpty): void {
     state.postEmptyStatus = isEmpty;
   },
 };
-
-export type Mutations = typeof mutations;
