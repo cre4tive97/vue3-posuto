@@ -49,64 +49,64 @@
 </template>
 
 <script lang="ts">
-import { registerUser } from "@/api/auth";
+import { defineComponent, ref, computed } from "vue";
 import SignupModal from "@/components/SignupModal.vue";
 import { SignupSuccess } from "@/types/types";
 import { validateUsername } from "@/utils/validation";
-import { AxiosError } from "axios";
-import Vue from "vue";
+import { registerUser } from "@/api/auth";
 
-export default Vue.extend({
-  name: "SignUpForm",
+export default defineComponent({
+  name: "SignupForm",
   components: {
     SignupModal,
   },
-  data() {
-    return {
-      //form data
-      username: "",
-      password: "",
-      nickname: "",
-      // modal
-      registerdNickname: "",
-      signupSuccess: false,
-    };
-  },
-  computed: {
-    isUsernameValid(): boolean {
-      return validateUsername(this.username);
-    },
-  },
-  methods: {
+  setup() {
+    //form data
+    const username = ref("");
+    const password = ref("");
+    const nickname = ref("");
+    // modal
+    const registerdNickname = ref("");
+    const signupSuccess = ref(false);
+    // computed
+    const isUsernameValid = computed(() => validateUsername(username.value));
+    // methods
     // 폼 제출할시 폼 데이터를 서버로 post 요청후, 모달창을 보여줌
-    async submitForm(): Promise<void> {
+    async function submitForm() {
       try {
         const { data } = await registerUser({
-          username: this.username,
-          password: this.password,
-          nickname: this.nickname,
+          username: username.value,
+          password: password.value,
+          nickname: nickname.value,
         });
-        this.showSignupModal(data);
-      } catch (error) {
-        if (this.isAxiosError(error) && error.response?.status === 409) {
+        showSignupModal(data);
+      } catch (error: any) {
+        if (error.response?.status === 409) {
           alert("이미 사용중인 Username 입니다!");
         }
-      } finally {
-        this.initForm();
       }
-    },
-    initForm() {
-      this.username = "";
-      this.password = "";
-      this.nickname = "";
-    },
-    showSignupModal(data: SignupSuccess) {
-      this.registerdNickname = data.nickname;
-      this.signupSuccess = true;
-    },
-    isAxiosError(error: any): error is AxiosError {
-      return !!error.isAxiosError;
-    },
+    }
+    function initForm() {
+      username.value = "";
+      password.value = "";
+      nickname.value = "";
+    }
+    function showSignupModal(data: SignupSuccess) {
+      registerdNickname.value = data.nickname;
+      signupSuccess.value = true;
+    }
+
+    return {
+      username,
+      password,
+      nickname,
+      registerdNickname,
+      signupSuccess,
+      isUsernameValid,
+      submitForm,
+      initForm,
+      showSignupModal,
+    };
   },
 });
 </script>

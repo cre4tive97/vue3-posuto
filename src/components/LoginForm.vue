@@ -52,6 +52,7 @@ export default defineComponent({
     // computed
     const isUsernameValid = computed(() => validateUsername(username.value));
     // methods
+    // 폼 제출
     async function submitForm() {
       try {
         await store.dispatch(ActionTypes.LOGIN_USER, {

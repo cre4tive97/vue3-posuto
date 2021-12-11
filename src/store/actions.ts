@@ -3,6 +3,7 @@ import { loginUser } from "@/api/auth";
 import { Mutations, MutationTypes } from "./mutations";
 import { ActionContext, ActionTree } from "vuex";
 import { State } from "./state";
+import { LoginType } from "@/types/types";
 
 export enum ActionTypes {
   LOGIN_USER = "LOGIN_USER",
@@ -19,13 +20,13 @@ type AugmentedActionContext = {
 export interface Actions {
   [ActionTypes.LOGIN_USER](
     { commit }: AugmentedActionContext,
-    payload: any
+    payload: LoginType
   ): void;
   [ActionTypes.GET_POSTCOLOR]({ commit }: AugmentedActionContext): void;
 }
 
 export const actions: ActionTree<State, State> & Actions = {
-  async [ActionTypes.LOGIN_USER]({ commit }, userData: any) {
+  async [ActionTypes.LOGIN_USER]({ commit }, userData) {
     const response = await loginUser(userData);
     commit(MutationTypes.SET_USER_TOKEN, response.data.token);
     commit(MutationTypes.SET_USER_NICKNAME, response.data.user.nickname);
