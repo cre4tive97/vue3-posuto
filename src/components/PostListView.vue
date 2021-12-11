@@ -108,7 +108,41 @@ export default defineComponent({
     function matchTitle(e: any) {
       currentEditingTitle.value = e.target.value;
     }
-
+    // 현재 수정중 포스트 컨텐츠과 currentEditingContents의 값을 일치화
+    function matchContents(e: any) {
+      currentEditingContents.value = e.target.value;
+    }
+    // 만약 현재 수정중인 포스트가 없다면, 수정 버튼을 활성화하고 MainPage.vue로 emit
+    function emitStartEditing(i: number) {
+      if (isEditing.value !== true) {
+        emit("startEditing", i);
+      } else {
+        alert("이미 수정중인 게시물이 있습니다.");
+      }
+    }
+    const item = ref<HTMLDivElement[]>();
+    function emitFinishEditing(i: number, postItem: PostDataType) {
+      if (item.value) {
+        const postData = {
+          title: currentEditingTitle.value,
+          contents: currentEditingContents.value,
+          position: {
+            width: item.value[i].getAttribute("gs-w"),
+            height: item.value[i].getAttribute("gs-h"),
+            x: item.value[i].getAttribute("gs-x"),
+            y: item.value[i].getAttribute("gs-y"),
+          },
+          isEditing: false,
+        };
+        emit("finishEditing", postItem, postData);
+        initCurrentEditingPost();
+      }
+    }
+    // CurrentEditing 타이틀/컨텐츠 초기화
+    function initCurrentEditingPost() {
+      currentEditingTitle.value = "";
+      currentEditingContents.value = "";
+    }
     return {
       grid,
       currentEditingTitle,
@@ -118,6 +152,11 @@ export default defineComponent({
       onMouseLeave,
       emitEditPost,
       matchTitle,
+      matchContents,
+      emitStartEditing,
+      item,
+      emitFinishEditing,
+      initCurrentEditingPost,
     };
   },
 });
