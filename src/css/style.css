@@ -1,0 +1,131 @@
+:root {
+    --main-color : #90caf9;
+    --main-dark : #5d99c6;
+    --main-light : #c3fdff;
+}
+
+body {
+    color : #2f2f2f;
+    background-color: #F5F5F6;
+}
+
+.page {
+  height: 90%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.hidden {
+  display: none;
+}
+
+/* Form */
+.form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+  }
+  label {
+    font-size: 1rem;
+  }
+  .input {
+    background-color: #e0e2e1;
+    border-radius: 8px;
+    height: 3rem;
+    font-size: 1.5rem;
+    padding: 0 12px;
+  }
+  .input:focus {
+    outline: none;
+  }
+  .form-box {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 1rem;
+    width: 50%;
+    min-width: 300px;
+    max-width: 700px;
+  }
+ 
+.btn {
+    padding: 6px 12px;
+    border: none;
+    background-color: var(--main-color);
+    border-radius: 4px;
+    font-size: 1.25rem;
+    transition: all 0.5s;
+}
+.btn:hover {
+  background-color: var(--main-dark);
+}
+.form__title {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-size: 3.5rem;
+    margin-bottom: 2rem;
+  }
+
+  .form__container {
+    background-color: #efefef;
+    padding: 1rem 2rem;
+    border-radius: 1rem;
+    width: 70%;
+    min-width: 350px;
+    max-width: 600px;
+    box-shadow: 0 0 3rem rgba(0, 0, 0, 0.1);
+  }
+
+/* Fixed buttons */
+
+  .setting__btn {
+    position: fixed;
+    bottom: 1rem;
+    right: 1rem;
+    border-style: none;
+    font-size: 2rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 2.5rem;
+    height: 2.5rem;
+    color: rgba(94, 154, 198, 0.7);
+    border-radius: 50%;
+    transition: all 0.3s;
+  }
+  .setting__btn:hover,
+  .add__btn:hover {
+    transform: scale(1.1);
+    color: rgba(94, 154, 198,1);
+    cursor: pointer;
+  }
+  .add__btn  {
+    position: fixed;
+    bottom: 4rem;
+    right: 1rem;
+    border-style: none;
+    font-size: 2rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 2.5rem;
+    height: 2.5rem;
+    color: rgba(94, 154, 198, 0.7);
+    border-radius: 50%;
+    transition: all 0.3s;
+  }
+
+  /* Animation */
+  .settingAnimation-enter,
+  .settingAnimation-leave-to {
+    opacity: 0;
+    transform: translateY(100%);
+  }
+  .settingAnimation-enter-active,
+  .settingAnimation-leave-active {
+    transition: all 0.5s;
+  }
