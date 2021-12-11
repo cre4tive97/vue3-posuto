@@ -65,7 +65,7 @@
 import { defineComponent, ref, onUpdated, toRefs, PropType } from "vue";
 import { Position, PostDataType } from "@/types/types";
 import "gridstack/dist/gridstack.min.css";
-import { GridItemHTMLElement, GridStack, GridStackElement, GridStackNode, GridStackPosition } from "gridstack";
+import { GridStack, GridStackNode } from "gridstack";
 import "gridstack/dist/h5/gridstack-dd-native";
 
 export default defineComponent({
@@ -84,9 +84,9 @@ export default defineComponent({
     const grid = ref<GridStack>();
     const currentEditingTitle = ref("");
     const currentEditingContents = ref("");
-    let { postItems, isEditing } = toRefs(props);
+    let { isEditing } = toRefs(props);
 
-    // onUpdated(() => setGrid());
+    onUpdated(() => setGrid());
 
     const btnGroup = ref<HTMLDivElement[]>();
     // 포스트 위에 마우스 올릴 시 버튼을 보여줌
@@ -163,7 +163,10 @@ export default defineComponent({
         // 수정버튼 클릭시 Form에 내용 작성할 경우 또한 'change'로 감지됨.
         // 모든 수정버튼이 비활성화 되었을 때에만 custom event 보냄.
         if (isEditing.value === false || isEditing.value === undefined) {
-          emit("save:position", setCurrentPositionValue(items));
+          emit(
+            "save:position",
+            setCurrentPositionValue(items as GridStackNode[])
+          );
         }
       });
       if (isEditing.value === true) {
@@ -185,14 +188,14 @@ export default defineComponent({
       });
     }
 
-    function setCurrentPositionValue(items :GridStackNode[]) {
-      let position = [] as Position[]
-      items.forEach(item  => {
+    function setCurrentPositionValue(items: GridStackNode[]) {
+      let position = [] as Position[];
+      items.forEach((item) => {
         position.push({
           width: item.w?.toString(),
           height: item.h?.toString(),
           x: item.x?.toString(),
-          y: item.y?.toString(),          
+          y: item.y?.toString(),
         });
       });
       return position;
@@ -212,7 +215,7 @@ export default defineComponent({
       item,
       emitFinishEditing,
       initCurrentEditingPost,
-      setGrid
+      setGrid,
       setCurrentPositionValue,
     };
   },
