@@ -12,11 +12,14 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
-export default Vue.extend({
+import { defineComponent } from "vue";
+export default defineComponent({
   name: "SignupModal",
   props: {
-    nickname: String,
+    nickname: {
+      type: String,
+      required: true,
+    },
   },
 });
 </script>
