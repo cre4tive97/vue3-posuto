@@ -33,49 +33,51 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
+import { defineComponent, ref, computed } from "vue";
 import { ActionTypes } from "@/store/actions";
 import { validateUsername } from "@/utils/validation";
-import { AxiosError } from "axios";
+import { useStore } from "@/store/index";
+import { useRouter } from "vue-router";
 
-export default Vue.extend({
+export default defineComponent({
   name: "LoginForm",
-  data() {
-    return {
-      username: "",
-      password: "",
-    };
-  },
-  computed: {
-    isUsernameValid(): boolean {
-      return validateUsername(this.username);
-    },
-  },
-  methods: {
-    async submitForm() {
+
+  setup() {
+    // store, router
+    const store = useStore();
+    const router = useRouter();
+    // data
+    const username = ref("");
+    const password = ref("");
+    // computed
+    const isUsernameValid = computed(() => validateUsername(username.value));
+    // methods
+    async function submitForm() {
       try {
-        await this.$store.dispatch(ActionTypes.LOGIN_USER, {
-          username: this.username,
-          password: this.password,
+        await store.dispatch(ActionTypes.LOGIN_USER, {
+          username: username.value,
+          password: password.value,
         });
-        this.$router.push("/main");
-      } catch (error) {
-        if (this.isAxiosError(error) && error.response?.status === 401) {
+        router.push("/main");
+      } catch (error: any) {
+        if (error.response.status === 401) {
           alert("Username 또는 Password가 틀렸습니다!");
         }
       } finally {
-        this.initForm();
+        initForm();
       }
-    },
-    initForm() {
-      this.username = "";
-      this.password = "";
-    },
-    isAxiosError(error: any): error is AxiosError {
-      return !!error.isAxiosError;
-    },
+    }
+    function initForm() {
+      username.value = "";
+      password.value = "";
+    }
+
+    return {
+      username,
+      password,
+      isUsernameValid,
+      submitForm,
+    };
   },
 });
 </script>
-
-<style scoped></style>
