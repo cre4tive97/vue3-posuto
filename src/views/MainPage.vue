@@ -197,6 +197,18 @@ export default defineComponent({
       }
     }
 
+    // 로컬스토리지에 post_color 없다면 기본 컬러 저장
+    function setPostColor() {
+      if (!localStorage.getItem("post_color"))
+        localStorage.setItem("post_color", "#FEC0CA");
+    }
+
+    // 메인페이지 최초 접속시 localStorage에 기록 남김
+    function setAccessRecord() {
+      if (!localStorage.getItem("access"))
+        localStorage.setItem("access", "true");
+    }
+
     return {
       router,
       store,
@@ -211,6 +223,7 @@ export default defineComponent({
       startEditing,
       finishEditing,
       savePosition,
+      setPostColor,
     };
   },
 });
