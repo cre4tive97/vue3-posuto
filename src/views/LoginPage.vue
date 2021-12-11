@@ -8,13 +8,13 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
+import { defineComponent } from "vue";
 import LoginForm from "@/components/LoginForm.vue";
-export default Vue.extend({
+
+export default defineComponent({
+  name: "LoginPage",
   components: {
     LoginForm,
   },
 });
 </script>
-
-<style scoped></style>
