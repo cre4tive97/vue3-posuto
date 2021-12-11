@@ -97,6 +97,9 @@ export default defineComponent({
     function onMouseLeave(i: number) {
       if (btnGroup.value) btnGroup.value[i].classList.add("hidden");
     }
+    // 최상위 div에 onmouseover에 isShowbtn 이벤트 걸고
+    // 버튼그룹 :class 스타일 바인딩 하면 더 효율적일듯?
+
     // 수정버튼 활성화
     function emitEditPost() {
       emit("editPost");
