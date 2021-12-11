@@ -85,16 +85,16 @@ export default defineComponent({
           isEditing: true,
         });
         // Refresh (gridStack reload)
-        await this.fetchPostData();
-        this.$router.go();
-      } catch (error) {
+        await fetchPostData();
+        router.go(0);
+      } catch (error: any) {
         if (error.response.status === 400) {
           alert("새로운 포스트가 이미 존재합니다.");
         } else if (error.response.status === 500) {
           alert(
             "서버에 문제가 있어 포스트를 생성하지 못했습니다. 잠시 후 다시 시도해주세요."
           );
-          this.$router.go();
+          router.go(0);
         }
       }
     }
@@ -108,6 +108,7 @@ export default defineComponent({
       isLoading,
       isEditing,
       fetchPostData,
+      createNewPost,
     };
   },
 });
