@@ -120,7 +120,7 @@ body {
   }
 
   /* Animation */
-  .settingAnimation-enter,
+  .settingAnimation-enter-from,
   .settingAnimation-leave-to {
     opacity: 0;
     transform: translateY(100%);
