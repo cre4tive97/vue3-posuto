@@ -21,7 +21,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from "vue";
+import { defineComponent } from "vue";
 import { ActionTypes } from "@/store/actions";
 import { useStore } from "@/store";
 
@@ -29,7 +29,7 @@ export default defineComponent({
   name: "AppSetting",
   setup() {
     const store = useStore();
-    const colors = ref([
+    const colors = [
       { color: "#FEC0CA", name: "Pink" },
       { color: "#2dfff1", name: "Mint" },
       { color: "#96d5ff", name: "Skyblue" },
@@ -38,13 +38,11 @@ export default defineComponent({
       { color: "#a5ffb9", name: "Green" },
       { color: "#DAC6AE", name: "Beige" },
       { color: "#ff7d3d", name: "Orange" },
-    ]);
+    ];
     function selectPostColor(color: string) {
       localStorage.setItem("post_color", color);
       store.dispatch(ActionTypes.GET_POSTCOLOR);
     }
-    console.log(colors);
-
     return {
       colors,
       selectPostColor,
