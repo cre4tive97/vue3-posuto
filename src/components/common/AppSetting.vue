@@ -7,7 +7,7 @@
           class="color__btn"
           v-for="(color, i) in colors"
           :key="i"
-          @click="selectPostColor(colors.color)"
+          @click="selectPostColor(color.color)"
         >
           <div
             class="color__circle"
@@ -21,7 +21,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue";
+import { defineComponent, ref } from "vue";
 import { ActionTypes } from "@/store/actions";
 import { useStore } from "@/store";
 
@@ -29,7 +29,7 @@ export default defineComponent({
   name: "AppSetting",
   setup() {
     const store = useStore();
-    const colors = [
+    const colors = ref([
       { color: "#FEC0CA", name: "Pink" },
       { color: "#2dfff1", name: "Mint" },
       { color: "#96d5ff", name: "Skyblue" },
@@ -38,11 +38,12 @@ export default defineComponent({
       { color: "#a5ffb9", name: "Green" },
       { color: "#DAC6AE", name: "Beige" },
       { color: "#ff7d3d", name: "Orange" },
-    ];
+    ]);
     function selectPostColor(color: string) {
       localStorage.setItem("post_color", color);
       store.dispatch(ActionTypes.GET_POSTCOLOR);
     }
+    console.log(colors);
 
     return {
       colors,

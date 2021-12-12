@@ -71,7 +71,7 @@ export default defineComponent({
           router.push("/login");
         }
       } finally {
-        // isLoading.value = false;
+        isLoading.value = false;
       }
     }
 
@@ -89,7 +89,7 @@ export default defineComponent({
         await fetchPostData();
         router.go(0);
       } catch (error: any) {
-        if (error?.response?.status === 400) {
+        if (error.response.status === 400) {
           alert("새로운 포스트가 이미 존재합니다.");
         } else if (error?.response?.status === 500) {
           alert(
