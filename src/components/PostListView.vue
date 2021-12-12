@@ -2,7 +2,11 @@
   <section class="grid-stack">
     <div
       v-for="(postItem, i) in postItems"
-      ref="item"
+      :ref="
+        (el) => {
+          if (el) item[i] = el;
+        }
+      "
       :key="i"
       class="grid-stack-item ui-draggable ui-resizable ui-resizable-autohide"
       @mouseover="onMouseOver(i)"
@@ -128,7 +132,7 @@ export default defineComponent({
         alert("이미 수정중인 게시물이 있습니다.");
       }
     }
-    const item = ref<HTMLDivElement[]>();
+    const item = ref<HTMLDivElement[]>([]);
     function emitFinishEditing(i: number, postItem: PostItemType) {
       if (item.value) {
         const postData: PostDataType = {
