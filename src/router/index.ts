@@ -22,7 +22,7 @@ const routes: Array<RouteRecordRaw> = [
     meta: { auth: true },
   },
   {
-    path: "*",
+    path: "/*",
     component: () => import("@/views/NotFoundPage.vue"),
   },
 ];

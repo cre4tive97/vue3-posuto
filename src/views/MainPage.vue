@@ -70,9 +70,9 @@ export default defineComponent({
         isLoading.value = false;
       } catch (error: any) {
         // 권한 에러 뜰 경우 login페이지로 이동
-        if (error.response.status === 401) {
-          router.push("/login");
-        }
+        // if (error.response.status === 401) {
+        //   router.push("/login");
+        // }
       }
     }
 

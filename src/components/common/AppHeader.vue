@@ -19,7 +19,7 @@
 <script lang="ts">
 import { defineComponent, computed } from "vue";
 import AppLogo from "@/components/common/AppLogo.vue";
-import { deleteCookie } from "@/utils/cookies.js";
+import { deleteCookie } from "@/utils/cookies";
 import { useRouter } from "vue-router";
 import { useStore } from "@/store/index";
 import { MutationTypes } from "@/store/mutations";

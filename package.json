@@ -14,8 +14,8 @@
     "core-js": "^3.6.5",
     "gridstack": "^4.3.1",
     "vue": "^3.0.0",
-    "vue-cookies-ts": "^1.5.19",
     "vue-router": "^4.0.0-0",
+    "vue-spinner": "^1.0.4",
     "vuex": "^4.0.0-0"
   },
   "devDependencies": {

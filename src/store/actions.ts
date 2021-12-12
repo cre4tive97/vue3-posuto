@@ -1,4 +1,4 @@
-import { saveAuthToCookie, saveUserToCookie } from "@/utils/cookies.js";
+import { saveAuthToCookie, saveUserToCookie } from "@/utils/cookies";
 import { loginUser } from "@/api/auth";
 import { Mutations, MutationTypes } from "./mutations";
 import { ActionContext, ActionTree } from "vuex";

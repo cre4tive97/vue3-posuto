@@ -33,12 +33,11 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed, reactive, toRefs } from "vue";
+import { defineComponent, computed, ref } from "vue";
 import { ActionTypes } from "@/store/actions";
 import { validateUsername } from "@/utils/validation";
 import { useStore } from "@/store/index";
 import { useRouter } from "vue-router";
-import { LoginType } from "@/types/types";
 
 export default defineComponent({
   name: "LoginForm",
@@ -49,27 +48,22 @@ export default defineComponent({
     const router = useRouter();
 
     // data
-    const loginInfo: LoginType = reactive({
-      username: "",
-      password: "",
-    });
-    const loginInfoAsRefs = toRefs(loginInfo);
+    const username = ref("");
+    const password = ref("");
 
     // computed
-    const isUsernameValid = computed(() =>
-      validateUsername(loginInfo.username)
-    );
+    const isUsernameValid = computed(() => validateUsername(username.value));
 
     // methods
     // 폼 제출
     async function submitForm() {
       try {
         await store.dispatch(ActionTypes.LOGIN_USER, {
-          username: loginInfo.username,
-          password: loginInfo.password,
+          username: username.value,
+          password: password.value,
         });
         router.push("/main");
-      } catch (error: any) {
+      } catch (error) {
         if (error.response.status === 401) {
           alert("Username 또는 Password가 틀렸습니다!");
         }
@@ -79,14 +73,15 @@ export default defineComponent({
     }
 
     function initForm() {
-      loginInfo.username = "";
-      loginInfo.password = "";
+      username.value = "";
+      password.value = "";
     }
 
     return {
       isUsernameValid,
       submitForm,
-      loginInfoAsRefs,
+      username,
+      password,
     };
   },
 });
