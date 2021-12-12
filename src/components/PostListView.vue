@@ -30,7 +30,14 @@
             />
           </form>
           <h1 v-else ref="title">{{ postItem.title }}</h1>
-          <div ref="btnGroup" class="post__btnGroup hidden">
+          <div
+            :ref="
+              (el) => {
+                if (el) btnGroup[i] = el;
+              }
+            "
+            class="post__btnGroup hidden"
+          >
             <i
               v-if="postItem.isEditing"
               @click="emitFinishEditing(i, postItem)"
@@ -88,11 +95,12 @@ export default defineComponent({
 
     onUpdated(() => setGrid());
 
-    const btnGroup = ref<HTMLDivElement[]>();
+    const btnGroup = ref<HTMLDivElement[]>([]);
     // 포스트 위에 마우스 올릴 시 버튼을 보여줌
     function onMouseOver(i: number) {
       if (btnGroup.value) btnGroup.value[i].classList.remove("hidden");
     }
+
     // 포스트 위에서 마우스가 사라지면 버튼을 사라지게 함
     function onMouseLeave(i: number) {
       if (btnGroup.value) btnGroup.value[i].classList.add("hidden");

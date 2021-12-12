@@ -1,17 +1,10 @@
-import { useStore } from "@/store/index";
-import {
-  AxiosInstance,
-  AxiosRequestConfig,
-  AxiosError,
-  AxiosResponse,
-} from "axios";
-
-const store = useStore();
+import { store } from "@/store/index";
+import { AxiosInstance, AxiosError } from "axios";
 
 export function setInterceptors(instance: AxiosInstance): AxiosInstance {
   instance.interceptors.request.use(
     function (config) {
-      if (config?.headers) config.headers.Authorization = store.state.token;
+      if (config.headers) config.headers.Authorization = store.state?.token;
       return config;
     },
     function (error: AxiosError) {

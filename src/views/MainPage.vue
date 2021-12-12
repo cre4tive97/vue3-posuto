@@ -36,6 +36,7 @@ import {
 } from "@/api/posts";
 import { PostDataType, PostItemType, Position } from "@/types/types";
 import { MutationTypes } from "@/store/mutations";
+import { ActionTypes } from "@/store/actions";
 
 export default defineComponent({
   name: "MainPage",
@@ -53,9 +54,6 @@ export default defineComponent({
     const isLoading = ref(false);
     const isEditing = ref(false);
 
-    // 포스트 조회
-    fetchPostData();
-
     // 전체 포스트 조회
     async function fetchPostData() {
       try {
@@ -67,12 +65,13 @@ export default defineComponent({
         postItemsEmptyCheck();
         await createFirstAccessDefaultPost();
         setAccessRecord();
-        isLoading.value = false;
       } catch (error: any) {
         // 권한 에러 뜰 경우 login페이지로 이동
-        // if (error.response.status === 401) {
-        //   router.push("/login");
-        // }
+        if (error?.response?.status === 401) {
+          router.push("/login");
+        }
+      } finally {
+        // isLoading.value = false;
       }
     }
 
@@ -90,9 +89,9 @@ export default defineComponent({
         await fetchPostData();
         router.go(0);
       } catch (error: any) {
-        if (error.response.status === 400) {
+        if (error?.response?.status === 400) {
           alert("새로운 포스트가 이미 존재합니다.");
-        } else if (error.response.status === 500) {
+        } else if (error?.response?.status === 500) {
           alert(
             "서버에 문제가 있어 포스트를 생성하지 못했습니다. 잠시 후 다시 시도해주세요."
           );
@@ -106,11 +105,11 @@ export default defineComponent({
         await deletePostData(postId);
         fetchPostData();
       } catch (error: any) {
-        if (error.response.status === 400) {
+        if (error?.response?.status === 400) {
           alert("포스트를 삭제할 수 없습니다.");
-        } else if (error.response.status === 404) {
+        } else if (error?.response?.status === 404) {
           alert("포스트를 찾을 수 없습니다.");
-        } else if (error.response.status === 500) {
+        } else if (error?.response?.status === 500) {
           alert(
             "서버에 문제가 있어 포스트를 삭제하지 못했습니다. 잠시 후 다시 시도해주세요."
           );
@@ -160,11 +159,11 @@ export default defineComponent({
         }
         // switch문 적용 가능?
       } catch (error: any) {
-        if (error.response.status === 400) {
+        if (error?.response?.status === 400) {
           alert("이미 같은 포스트가 존재합니다.");
-        } else if (error.response.status === 404) {
+        } else if (error?.response?.status === 404) {
           alert("포스트를 찾을 수 없습니다.");
-        } else if (error.response.status === 500) {
+        } else if (error?.response?.status === 500) {
           alert(
             "서버에 문제가 있어 포스트를 수정하지 못했습니다. 잠시 후 다시 시도해주세요."
           );
@@ -234,6 +233,10 @@ export default defineComponent({
         router.go(0);
       }
     }
+
+    fetchPostData();
+    setPostColor();
+    store.dispatch(ActionTypes.GET_POSTCOLOR);
 
     return {
       router,
