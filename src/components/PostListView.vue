@@ -1,27 +1,18 @@
 <script lang="ts" setup>
-import { ref, onUpdated, toRefs, PropType, computed } from "vue";
-import {
-  LocalPostItemType,
-  Position,
-  PostDataType,
-  PostItemType,
-} from "@/types/types";
+import { ref, onUpdated, computed } from "vue";
+import { LocalPostItemType, Position, PostDataType } from "@/types/types";
 import "gridstack/dist/gridstack.min.css";
 import { GridStack, GridStackNode } from "gridstack";
 import "gridstack/dist/h5/gridstack-dd-native";
 import { store } from "@/store";
 
 //Props
-const props = defineProps({
-  postItems: {
-    type: Array as PropType<LocalPostItemType[]>,
-    required: true,
-  },
-  isEditing: {
-    type: Boolean,
-    default: false,
-  },
-});
+interface Props {
+  postItems: LocalPostItemType[];
+  isEditing: boolean;
+}
+const props = defineProps<Props>();
+
 // Emits
 const emit = defineEmits([
   "editPost",
@@ -35,7 +26,6 @@ const postColor = computed(() => store.state.postColor);
 const grid = ref<GridStack>();
 const currentEditingTitle = ref("");
 const currentEditingContents = ref("");
-let { isEditing } = toRefs(props);
 
 onUpdated(() => setGrid());
 
@@ -66,7 +56,7 @@ function matchContents(e: any) {
 }
 // 만약 현재 수정중인 포스트가 없다면, 수정 버튼을 활성화하고 MainPage.vue로 emit
 function emitStartEditing(i: number) {
-  if (isEditing.value !== true) {
+  if (props.isEditing !== true) {
     emit("startEditing", i);
   } else {
     alert("이미 수정중인 게시물이 있습니다.");
@@ -114,11 +104,12 @@ function setGrid() {
   grid.value.on("change", (event, items) => {
     // 수정버튼 클릭시 Form에 내용 작성할 경우 또한 'change'로 감지됨.
     // 모든 수정버튼이 비활성화 되었을 때에만 custom event 보냄.
-    if (isEditing.value === false || isEditing.value === undefined) {
+    if (props.isEditing === false || props.isEditing === undefined) {
       emit("save:position", setCurrentPositionValue(items as GridStackNode[]));
     }
   });
-  if (isEditing.value === true) {
+
+  if (props.isEditing === true) {
     // 수정버튼 활성화시 포스트 이동/리사이즈 비활성화
     grid.value.enableMove(false);
     grid.value.enableResize(false);

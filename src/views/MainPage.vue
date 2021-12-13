@@ -34,7 +34,12 @@ import {
   deletePostData,
   updatePostData,
 } from "@/api/posts";
-import { PostDataType, PostItemType, Position, LocalPostDataType, LocalPostItemType } from "@/types/types";
+import {
+  PostItemType,
+  Position,
+  LocalPostDataType,
+  LocalPostItemType,
+} from "@/types/types";
 import { MutationTypes } from "@/store/mutations";
 import { ActionTypes } from "@/store/actions";
 
