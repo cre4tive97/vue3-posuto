@@ -43,11 +43,26 @@ export interface Position {
 export interface PostDataType {
   title: string;
   contents: string;
-  position: Position[] | Position;
+  position: Position;
+  isEditing: boolean;
+}
+
+export interface LocalPostDataType {
+  title: string;
+  contents: string;
+  position: Position[];
   isEditing: boolean;
 }
 
 export interface PostItemType extends PostDataType {
+  createdAt: string;
+  createdBy: string;
+  updatedAt: string;
+  __v: number;
+  _id: string;
+}
+
+export interface LocalPostItemType extends LocalPostDataType {
   createdAt: string;
   createdBy: string;
   updatedAt: string;
