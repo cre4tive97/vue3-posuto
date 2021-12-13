@@ -54,9 +54,3 @@ export interface PostItemType extends PostDataType {
   __v: number;
   _id: string;
 }
-
-export namespace VueEvent {
-  export interface Input extends InputEvent {
-    target: null;
-  }
-}
