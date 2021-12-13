@@ -73,7 +73,7 @@ function emitStartEditing(i: number) {
   }
 }
 const item = ref<HTMLDivElement[]>([]);
-function emitFinishEditing(i: number, postItem: PostItemType) {
+function emitFinishEditing(i: number, postItem: LocalPostItemType) {
   if (item.value) {
     const postData: PostDataType = {
       title: currentEditingTitle.value,

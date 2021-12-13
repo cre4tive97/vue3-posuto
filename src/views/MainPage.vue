@@ -34,7 +34,7 @@ import {
   deletePostData,
   updatePostData,
 } from "@/api/posts";
-import { PostDataType, PostItemType, Position } from "@/types/types";
+import { PostDataType, PostItemType, Position, LocalPostDataType, LocalPostItemType } from "@/types/types";
 import { MutationTypes } from "@/store/mutations";
 import { ActionTypes } from "@/store/actions";
 
@@ -48,7 +48,7 @@ export default defineComponent({
   setup() {
     const router = useRouter();
     const store = useStore();
-    const postItems = ref<PostItemType[]>([]);
+    const postItems = ref<LocalPostItemType[]>([]);
     const settingState = ref(false);
     const updateStatus = ref(false);
     const isLoading = ref(false);
@@ -125,7 +125,7 @@ export default defineComponent({
     // 수정 완료, 데이터 저장
     async function finishEditing(
       postItem: PostItemType,
-      postData: PostDataType
+      postData: LocalPostDataType
     ) {
       const id = postItem._id;
       try {
