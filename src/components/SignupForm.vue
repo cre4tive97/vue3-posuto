@@ -1,3 +1,46 @@
+<script lang="ts" setup>
+import { ref, computed } from "vue";
+import SignupModal from "@/components/SignupModal.vue";
+import { SignupSuccess } from "@/types/types";
+import { validateUsername } from "@/utils/validation";
+import { registerUser } from "@/api/auth";
+
+//form data
+const username = ref("");
+const password = ref("");
+const nickname = ref("");
+// modal
+const registerdNickname = ref("");
+const signupSuccess = ref(false);
+// computed
+const isUsernameValid = computed(() => validateUsername(username.value));
+// methods
+// 폼 제출할시 폼 데이터를 서버로 post 요청후, 모달창을 보여줌
+async function submitForm() {
+  try {
+    const { data } = await registerUser({
+      username: username.value,
+      password: password.value,
+      nickname: nickname.value,
+    });
+    showSignupModal(data);
+  } catch (error: any) {
+    if (error.response?.status === 409) {
+      alert("이미 사용중인 Username 입니다!");
+    }
+  }
+}
+function initForm() {
+  username.value = "";
+  password.value = "";
+  nickname.value = "";
+}
+function showSignupModal(data: SignupSuccess) {
+  registerdNickname.value = data.nickname;
+  signupSuccess.value = true;
+}
+</script>
+
 <template>
   <form class="form" @submit.prevent="submitForm">
     <div class="form-box">
@@ -47,69 +90,6 @@
     </transition>
   </form>
 </template>
-
-<script lang="ts">
-import { defineComponent, ref, computed } from "vue";
-import SignupModal from "@/components/SignupModal.vue";
-import { SignupSuccess } from "@/types/types";
-import { validateUsername } from "@/utils/validation";
-import { registerUser } from "@/api/auth";
-
-export default defineComponent({
-  name: "SignupForm",
-  components: {
-    SignupModal,
-  },
-  setup() {
-    //form data
-    const username = ref("");
-    const password = ref("");
-    const nickname = ref("");
-    // modal
-    const registerdNickname = ref("");
-    const signupSuccess = ref(false);
-    // computed
-    const isUsernameValid = computed(() => validateUsername(username.value));
-    // methods
-    // 폼 제출할시 폼 데이터를 서버로 post 요청후, 모달창을 보여줌
-    async function submitForm() {
-      try {
-        const { data } = await registerUser({
-          username: username.value,
-          password: password.value,
-          nickname: nickname.value,
-        });
-        showSignupModal(data);
-      } catch (error: any) {
-        if (error.response?.status === 409) {
-          alert("이미 사용중인 Username 입니다!");
-        }
-      }
-    }
-    function initForm() {
-      username.value = "";
-      password.value = "";
-      nickname.value = "";
-    }
-    function showSignupModal(data: SignupSuccess) {
-      registerdNickname.value = data.nickname;
-      signupSuccess.value = true;
-    }
-
-    return {
-      username,
-      password,
-      nickname,
-      registerdNickname,
-      signupSuccess,
-      isUsernameValid,
-      submitForm,
-      initForm,
-      showSignupModal,
-    };
-  },
-});
-</script>
 
 <style scoped>
 .modalAnimation-enter {
