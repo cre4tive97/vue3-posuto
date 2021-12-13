@@ -1,19 +1,12 @@
+<script lang="ts" setup>
+import SquareLoader from "vue-spinner/src/SquareLoader.vue";
+</script>
+
 <template>
   <div>
     <SquareLoader color="#8BDDED" />
   </div>
 </template>
-
-<script lang="ts">
-import { defineComponent } from "vue";
-import SquareLoader from "vue-spinner/src/SquareLoader.vue";
-export default defineComponent({
-  name: "Spinner",
-  components: {
-    SquareLoader,
-  },
-});
-</script>
 
 <style scoped>
 div {
