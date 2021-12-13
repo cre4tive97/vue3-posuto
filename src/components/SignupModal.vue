@@ -1,3 +1,12 @@
+<script lang="ts" setup>
+interface Props {
+  nickname?: string;
+}
+const props = withDefaults(defineProps<Props>(), {
+  nickname: "nickname",
+});
+</script>
+
 <template>
   <div class="modal">
     <div class="modal__white">
@@ -10,19 +19,6 @@
     </div>
   </div>
 </template>
-
-<script lang="ts">
-import { defineComponent } from "vue";
-export default defineComponent({
-  name: "SignupModal",
-  props: {
-    nickname: {
-      type: String,
-      required: true,
-    },
-  },
-});
-</script>
 
 <style scoped>
 .modal {
