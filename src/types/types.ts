@@ -33,10 +33,10 @@ export interface SignupSuccess {
 }
 
 export interface Position {
-  width?: string;
-  height?: string;
-  x?: string;
-  y?: string;
+  width?: string | number;
+  height?: string | number;
+  x?: string | number;
+  y?: string | number;
   id?: string;
 }
 

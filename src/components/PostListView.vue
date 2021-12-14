@@ -101,6 +101,7 @@ function setGrid() {
         navigator.userAgent
       ),
   });
+
   grid.value.on("change", (event, items) => {
     // 수정버튼 클릭시 Form에 내용 작성할 경우 또한 'change'로 감지됨.
     // 모든 수정버튼이 비활성화 되었을 때에만 custom event 보냄.
@@ -127,25 +128,19 @@ function setGrid() {
     document.body.style.cursor = "auto";
   });
 }
-
+// 이동/리사이즈 이벤트가 발생한 아이템들의 포지션값을 리턴함
 function setCurrentPositionValue(items: GridStackNode[]) {
   let position = [] as Position[];
   items.forEach((item) => {
-    const [width, height, x, y, id] = [
-      item.w?.toString(),
-      item.h?.toString(),
-      item.x?.toString(),
-      item.y?.toString(),
-      item.id?.toString(),
-    ];
     position.push({
-      width,
-      height,
-      x,
-      y,
-      id,
+      width: item.w,
+      height: item.h,
+      x: item.x,
+      y: item.y,
+      id: item.el?.id,
     });
   });
+  console.log(position);
   return position;
 }
 </script>
