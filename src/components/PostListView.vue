@@ -27,7 +27,9 @@ const grid = ref<GridStack>();
 const currentEditingTitle = ref("");
 const currentEditingContents = ref("");
 
-onUpdated(() => setGrid());
+onUpdated(() => {
+  setGrid();
+});
 
 const btnGroup = ref<HTMLDivElement[]>([]);
 // 포스트 위에 마우스 올릴 시 버튼을 보여줌
@@ -105,8 +107,9 @@ function setGrid() {
   grid.value.on("change", (event, items) => {
     // 수정버튼 클릭시 Form에 내용 작성할 경우 또한 'change'로 감지됨.
     // 모든 수정버튼이 비활성화 되었을 때에만 custom event 보냄.
-    if (props.isEditing === false || props.isEditing === undefined) {
+    if (props.isEditing === false) {
       emit("save:position", setCurrentPositionValue(items as GridStackNode[]));
+      console.log(1);
     }
   });
 

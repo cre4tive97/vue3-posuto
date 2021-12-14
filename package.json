@@ -9,6 +9,7 @@
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
+    "@vueuse/core": "^7.3.0",
     "axios": "^0.24.0",
     "cookies-ts": "^1.0.5",
     "core-js": "^3.6.5",
