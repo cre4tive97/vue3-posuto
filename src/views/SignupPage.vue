@@ -1,3 +1,7 @@
+<script lang="ts" setup>
+import SignupForm from "@/components/SignupForm.vue";
+</script>
+
 <template>
   <div class="page">
     <div class="form__container">
@@ -6,17 +10,3 @@
     </div>
   </div>
 </template>
-
-<script lang="ts">
-import { defineComponent } from "vue";
-import SignupForm from "@/components/SignupForm.vue";
-
-export default defineComponent({
-  name: "SignupPage",
-  components: {
-    SignupForm,
-  },
-});
-</script>
-
-<style scoped></style>
