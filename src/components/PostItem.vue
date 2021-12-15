@@ -11,7 +11,7 @@ const obj = reactive<ElType>({
   y: [],
 });
 
-const el = ref<HTMLElement[] | null>(null);
+const el = ref<HTMLElement | null>(null);
 
 // `style` will be a helper computed for `left: ?px; top: ?px;`
 // const { x, y } = el.value?.forEach((item) => {
@@ -20,10 +20,29 @@ const el = ref<HTMLElement[] | null>(null);
 //     pointerTypes: ["touch"],
 //   });
 // });
-const { x, y, style } = useDraggable(el, {
+const { x, y, style, isDragging, position } = useDraggable(el, {
   initialValue: { x: 40, y: 40 },
 });
 </script>
 <template>
-  <div ref="el" :style="style" style="position: fixed">asdfadf</div>
+  <div class="post" ref="el" :style="style" style="position: fixed">
+    {{ isDragging }}
+    {{ Math.floor(position.x) }}
+    {{ Math.floor(position.y) }}
+  </div>
 </template>
+<style scoped>
+.post {
+  box-sizing: content-box;
+  width: 200px;
+  height: 300px;
+  border-top-right-radius: 1rem;
+  padding: 12px;
+  -webkit-box-shadow: 0px 9px 24px 3px rgba(0, 0, 0, 0.15);
+  box-shadow: 0px 9px 24px 3px rgba(0, 0, 0, 0.15);
+  overflow: auto;
+  overflow-wrap: break-word;
+  transition: background-color 0.5s;
+  resize: both;
+}
+</style>
