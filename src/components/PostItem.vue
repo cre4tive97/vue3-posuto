@@ -22,6 +22,7 @@ const el = ref<HTMLElement | null>(null);
 // });
 const { x, y, style, isDragging, position } = useDraggable(el, {
   initialValue: { x: 40, y: 40 },
+  onEnd: (position, (position) => alert(position.x)),
 });
 </script>
 <template>
