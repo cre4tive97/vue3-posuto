@@ -1,6 +1,12 @@
 <script lang="ts" setup>
-import { useDraggable, useElementSize } from "@vueuse/core";
+import { useDraggable, useElementSize, useEventListener } from "@vueuse/core";
 import { ref, reactive } from "vue";
+
+const isDraggable = ref(true);
+
+function setDraggable() {
+  isDraggable.value = !isDraggable.value;
+}
 
 interface ElType {
   x: number[];
@@ -11,25 +17,51 @@ const obj = reactive<ElType>({
   y: [],
 });
 
-const el = ref<HTMLElement | null>(null);
-
-// `style` will be a helper computed for `left: ?px; top: ?px;`
-// const { x, y } = el.value?.forEach((item) => {
-//   useDraggable(item, {
-//     initialValue: { x: 40, y: 40 },
-//     pointerTypes: ["touch"],
-//   });
-// });
-const { x, y, style, isDragging, position } = useDraggable(el, {
-  initialValue: { x: 40, y: 40 },
-  onEnd: (position, (position) => alert(position.x)),
+const post = ref<HTMLElement | null>(null);
+const { x, y, style, isDragging, position } = useDraggable(post, {
+  exact: true,
+  preventDefault: true,
+  initialValue: { x: 100, y: 100 },
+  onEnd: (position) =>
+    console.log(
+      style.value,
+      Math.floor(position.x),
+      Math.floor(position.y),
+      Math.floor(width.value),
+      Math.floor(height.value)
+    ),
 });
+const { width, height } = useElementSize(post);
 </script>
 <template>
-  <div class="post" ref="el" :style="style" style="position: fixed">
-    {{ isDragging }}
-    {{ Math.floor(position.x) }}
-    {{ Math.floor(position.y) }}
+  <div
+    v-if="isDraggable"
+    class="post"
+    ref="post"
+    :style="style"
+    style="position: fixed"
+    @dblclick="setDraggable"
+  >
+    <div class="post__draggable">
+      {{ isDragging }}
+      {{ isDraggable }}
+      {{ Math.floor(position.x) }}
+      {{ Math.floor(position.y) }}
+    </div>
+  </div>
+  <div
+    v-else
+    class="post"
+    :style="style"
+    style="position: fixed"
+    @dblclick="setDraggable"
+  >
+    <div class="post__draggable">
+      {{ isDragging }}
+      {{ isDraggable }}
+      {{ Math.floor(position.x) }}
+      {{ Math.floor(position.y) }}
+    </div>
   </div>
 </template>
 <style scoped>
