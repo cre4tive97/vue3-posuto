@@ -3,52 +3,53 @@ import { useDraggable, useElementSize, useEventListener } from "@vueuse/core";
 import { ref, reactive, onMounted } from "vue";
 
 const isDraggable = ref(true);
+interface Props {
+  postItem: {
+    x: number;
+    y: number;
+    width: number;
+    height: number;
+  };
+}
+const props = defineProps<Props>();
 
 function setDraggable() {
   isDraggable.value = !isDraggable.value;
 }
-
-interface ElType {
-  x: number[];
-  y: number[];
-}
-const obj = reactive<ElType>({
-  x: [],
-  y: [],
-});
-const postElement = ref<HTMLElement | null>(null);
-const postSize = ref<HTMLElement | null>(null);
-const { width, height } = useElementSize(postSize, {
-  width: postElement.value?.offsetWidth - 24,
-  height: postElement.value?.offsetHeight - 24,
+const postDraggableElement = ref<HTMLElement | null>(null);
+const postSizeElement = ref<HTMLElement | null>(null);
+const { width, height } = useElementSize(postDraggableElement, {
+  width: props.postItem.width,
+  height: props.postItem.height,
 });
 
-const { x, y, style, isDragging, position } = useDraggable(postElement, {
-  exact: true,
-  preventDefault: true,
-  initialValue: { x: 100, y: 100 },
-  onEnd: (position) =>
-    console.log(
-      style.value,
-      Math.floor(position.x),
-      Math.floor(position.y),
-      width.value,
-      height.value
-    ),
-});
-const positionStyle = reactive({
-  width: `${width.value}px`,
-  height: `${height.value}px`,
-  left: `${x.value}px`,
-  top: `${y.value}px`,
-});
+const { x, y, style, isDragging, position } = useDraggable(
+  postDraggableElement,
+  {
+    exact: true,
+    preventDefault: true,
+    initialValue: { x: props.postItem.x, y: props.postItem.y },
+    onEnd: (position) =>
+      console.log(
+        style.value,
+        Math.floor(position.x),
+        Math.floor(position.y),
+        width.value,
+        height.value
+      ),
+  }
+);
+
+const positionStyle = ref(
+  `width:${width.value}px; height:${height.value}px; left:${x.value}px; top:${y.value}px`
+);
 </script>
 <template>
   <div
     v-show="isDraggable"
     class="post"
-    ref="postElement"
-    :style="style"
+    ref="postDraggableElement"
+    :style="positionStyle"
     style="position: fixed"
     @dblclick="setDraggable"
   >
@@ -59,9 +60,9 @@ const positionStyle = reactive({
   </div>
   <div
     v-show="!isDraggable"
-    ref="postSize"
+    ref="postSizeElement"
     class="post"
-    :style="style"
+    :style="positionStyle"
     style="position: fixed; opacity: 0.7"
     @dblclick="setDraggable"
   >
@@ -75,8 +76,6 @@ const positionStyle = reactive({
 .post {
   background-color: pink;
   box-sizing: content-box;
-  width: 200px;
-  height: 300px;
   border-top-right-radius: 1rem;
   padding: 12px;
   -webkit-box-shadow: 0px 9px 24px 3px rgba(0, 0, 0, 0.15);
