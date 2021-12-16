@@ -18,6 +18,11 @@ const postItems = ref([
     height: 70,
   },
 ]);
+
+function saveSize(payload) {
+  console.log(1);
+  console.log(payload);
+}
 </script>
 
 <template>
@@ -26,6 +31,8 @@ const postItems = ref([
       v-for="(postItem, i) in postItems"
       :key="i"
       :postItem="postItem"
+      :i="i"
+      @save:size="saveSize"
     />
   </div>
 </template>

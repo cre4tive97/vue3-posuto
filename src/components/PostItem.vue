@@ -10,64 +10,93 @@ interface Props {
     width: number;
     height: number;
   };
+  i: number;
 }
 const props = defineProps<Props>();
-const emits = defineEmits(["change:position"]);
+const emits = defineEmits(["change:size"]);
 
 function setDraggable() {
+  if (isDraggable.value) {
+    sizeWidth.value = draggableWidth.value;
+    sizeHeight.value = draggableHeight.value;
+  } else {
+    draggableWidth.value = sizeWidth.value;
+    draggableHeight.value = sizeHeight.value;
+    emits("change:size", {
+      width: sizeWidth.value,
+      height: sizeHeight.value,
+      index: props.i,
+    });
+  }
   isDraggable.value = !isDraggable.value;
 }
 const postDraggableElement = ref<HTMLElement | null>(null);
 const postSizeElement = ref<HTMLElement | null>(null);
-const { width, height } = useElementSize(postDraggableElement, {
-  width: props.postItem.width,
-  height: props.postItem.height,
-});
+const { width: draggableWidth, height: draggableHeight } = useElementSize(
+  postDraggableElement,
+  {
+    width: props.postItem.width,
+    height: props.postItem.height,
+  }
+);
+
+const { width: sizeWidth, height: sizeHeight } =
+  useElementSize(postSizeElement);
 
 const { x, y, style, isDragging, position } = useDraggable(
   postDraggableElement,
   {
-    exact: true,
+    exact: false,
     preventDefault: true,
     initialValue: { x: props.postItem.x, y: props.postItem.y },
     onEnd: () => {
-      console.log(x.value, y.value, width.value, height.value);
-      emits("change:position");
+      console.log(
+        Math.floor(x.value),
+        y.value,
+        draggableWidth.value,
+        draggableHeight.value,
+        sizeWidth.value,
+        sizeHeight.value
+      );
     },
   }
 );
-const sizeStyle = ref(`width:${width.value}px; height:${height.value}px; `);
+const sizeStyle = ref(
+  `width:${draggableWidth.value}px; height:${draggableHeight.value}px;`
+);
 </script>
 <template>
-  <div
-    v-show="isDraggable"
-    class="post"
-    ref="postDraggableElement"
-    :style="style + sizeStyle"
-    style="position: fixed"
-    @dblclick="setDraggable"
-  >
-    <div class="post__draggable">
-      {{ isDraggable }}
-      {{ width }}
+  <div class="post">
+    <div
+      v-if="isDraggable"
+      class="post__item"
+      ref="postDraggableElement"
+      :style="style + sizeStyle"
+      style="position: fixed"
+      @dblclick="setDraggable"
+    >
+      <div class="post__draggable">
+        {{ isDraggable }}
+        {{ draggableWidth }}
+      </div>
     </div>
-  </div>
-  <div
-    v-show="!isDraggable"
-    ref="postSizeElement"
-    class="post"
-    :style="style + sizeStyle"
-    style="position: fixed; opacity: 0.7"
-    @dblclick="setDraggable"
-  >
-    <div class="post__draggable">
-      {{ isDraggable }}
-      {{ width }}
+    <div
+      v-else
+      ref="postSizeElement"
+      class="post__item"
+      :style="style + sizeStyle"
+      style="position: fixed; opacity: 0.7"
+      @dblclick="setDraggable"
+    >
+      <div class="post__draggable">
+        {{ isDraggable }}
+        {{ sizeWidth }}
+      </div>
     </div>
   </div>
 </template>
 <style scoped>
-.post {
+.post__item {
   background-color: pink;
   box-sizing: content-box;
   border-top-right-radius: 1rem;
