@@ -12,6 +12,7 @@ interface Props {
   };
 }
 const props = defineProps<Props>();
+const emits = defineEmits(["change:position"]);
 
 function setDraggable() {
   isDraggable.value = !isDraggable.value;
@@ -29,27 +30,20 @@ const { x, y, style, isDragging, position } = useDraggable(
     exact: true,
     preventDefault: true,
     initialValue: { x: props.postItem.x, y: props.postItem.y },
-    onEnd: (position) =>
-      console.log(
-        style.value,
-        Math.floor(position.x),
-        Math.floor(position.y),
-        width.value,
-        height.value
-      ),
+    onEnd: () => {
+      console.log(x.value, y.value, width.value, height.value);
+      emits("change:position");
+    },
   }
 );
-
-const positionStyle = ref(
-  `width:${width.value}px; height:${height.value}px; left:${x.value}px; top:${y.value}px`
-);
+const sizeStyle = ref(`width:${width.value}px; height:${height.value}px; `);
 </script>
 <template>
   <div
     v-show="isDraggable"
     class="post"
     ref="postDraggableElement"
-    :style="positionStyle"
+    :style="style + sizeStyle"
     style="position: fixed"
     @dblclick="setDraggable"
   >
@@ -62,7 +56,7 @@ const positionStyle = ref(
     v-show="!isDraggable"
     ref="postSizeElement"
     class="post"
-    :style="positionStyle"
+    :style="style + sizeStyle"
     style="position: fixed; opacity: 0.7"
     @dblclick="setDraggable"
   >

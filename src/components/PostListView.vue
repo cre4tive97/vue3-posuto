@@ -6,14 +6,14 @@ import PostItem from "@/components/PostItem.vue";
 
 const postItems = ref([
   {
-    x: 30,
-    y: 30,
+    x: 80,
+    y: 80,
     width: 50,
     height: 70,
   },
   {
-    x: 100,
-    y: 150,
+    x: 150,
+    y: 250,
     width: 60,
     height: 70,
   },
