@@ -19,9 +19,15 @@ const postItems = ref([
   },
 ]);
 
-function saveSize(payload) {
-  console.log(1);
-  console.log(payload);
+interface EmitSizeType {
+  width: number;
+  height: number;
+  index: number;
+}
+
+function saveSize(payload: EmitSizeType) {
+  postItems.value[payload.index].width = payload.width;
+  postItems.value[payload.index].height = payload.height;
 }
 </script>
 
@@ -32,7 +38,7 @@ function saveSize(payload) {
       :key="i"
       :postItem="postItem"
       :i="i"
-      @save:size="saveSize"
+      @change:size="saveSize"
     />
   </div>
 </template>

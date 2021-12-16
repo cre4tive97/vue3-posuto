@@ -43,11 +43,12 @@ const { width: draggableWidth, height: draggableHeight } = useElementSize(
 const { width: sizeWidth, height: sizeHeight } =
   useElementSize(postSizeElement);
 
+const sizeStyle = `width:${draggableWidth.value}px; height:${draggableHeight.value}px;`;
+
 const { x, y, style, isDragging, position } = useDraggable(
   postDraggableElement,
   {
     exact: false,
-    preventDefault: true,
     initialValue: { x: props.postItem.x, y: props.postItem.y },
     onEnd: () => {
       console.log(
@@ -61,14 +62,11 @@ const { x, y, style, isDragging, position } = useDraggable(
     },
   }
 );
-const sizeStyle = ref(
-  `width:${draggableWidth.value}px; height:${draggableHeight.value}px;`
-);
 </script>
 <template>
   <div class="post">
     <div
-      v-if="isDraggable"
+      v-show="isDraggable"
       class="post__item"
       ref="postDraggableElement"
       :style="style + sizeStyle"
@@ -81,7 +79,7 @@ const sizeStyle = ref(
       </div>
     </div>
     <div
-      v-else
+      v-show="!isDraggable"
       ref="postSizeElement"
       class="post__item"
       :style="style + sizeStyle"
