@@ -32,16 +32,15 @@ function setDraggable() {
 }
 const postDraggableElement = ref<HTMLElement | null>(null);
 const postSizeElement = ref<HTMLElement | null>(null);
-const { width: draggableWidth, height: draggableHeight } = useElementSize(
-  postDraggableElement,
-  {
-    width: props.postItem.width,
-    height: props.postItem.height,
-  }
-);
+const { width: draggableWidth, height: draggableHeight } =
+  useElementSize(postDraggableElement);
+draggableWidth.value = props.postItem.width;
+draggableHeight.value = props.postItem.height;
 
 const { width: sizeWidth, height: sizeHeight } =
   useElementSize(postSizeElement);
+sizeWidth.value = props.postItem.width;
+sizeHeight.value = props.postItem.height;
 
 const sizeStyle = `width:${draggableWidth.value}px; height:${draggableHeight.value}px;`;
 
