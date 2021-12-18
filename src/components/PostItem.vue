@@ -47,11 +47,13 @@ const { x, y, style, isDragging, position } = useDraggable(
     exact: false,
     initialValue: { x: postItem.value.x, y: postItem.value.y },
     onEnd: () => {
-      //   emits("change:position", {
-      //     width: sizeWidth.value,
-      //     height: sizeHeight.value,
-      //     index: props.i,
-      //   });
+      if (x.value !== postItem.value.x || y.value !== postItem.value.y) {
+        emits("change:position", {
+          x: x.value,
+          y: y.value,
+          index: props.i,
+        });
+      }
     },
   }
 );
