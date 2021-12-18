@@ -25,9 +25,9 @@ interface EmitSizeType {
   index: number;
 }
 
-function saveSize(payload: EmitSizeType) {
-  postItems.value[payload.index].width = payload.width;
-  postItems.value[payload.index].height = payload.height;
+function saveSize(emitSize: EmitSizeType) {
+  postItems.value[emitSize.index].width = emitSize.width;
+  postItems.value[emitSize.index].height = emitSize.height;
 }
 </script>
 

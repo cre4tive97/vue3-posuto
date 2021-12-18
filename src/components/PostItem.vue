@@ -42,7 +42,12 @@ const { width: sizeWidth, height: sizeHeight } =
 sizeWidth.value = props.postItem.width;
 sizeHeight.value = props.postItem.height;
 
-const sizeStyle = `width:${draggableWidth.value}px; height:${draggableHeight.value}px;`;
+const draggableStyle = ref(
+  `width:${draggableWidth.value}px; height:${draggableHeight.value}px;`
+);
+const sizeStyle = ref(
+  `width:${sizeWidth.value}px; height:${sizeHeight.value}px;`
+);
 
 const { x, y, style, isDragging, position } = useDraggable(
   postDraggableElement,
@@ -68,7 +73,7 @@ const { x, y, style, isDragging, position } = useDraggable(
       v-show="isDraggable"
       class="post__item"
       ref="postDraggableElement"
-      :style="style + sizeStyle"
+      :style="style + draggableStyle"
       style="position: fixed"
       @dblclick="setDraggable"
     >
