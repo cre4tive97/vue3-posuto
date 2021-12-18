@@ -24,10 +24,20 @@ interface EmitSizeType {
   height: number;
   index: number;
 }
+interface EmitPositionType {
+  x: number;
+  y: number;
+  index: number;
+}
 
 function saveSize(emitSize: EmitSizeType) {
   postItems.value[emitSize.index].width = emitSize.width;
   postItems.value[emitSize.index].height = emitSize.height;
+}
+
+function savePosition(emitPosition: EmitPositionType) {
+  postItems.value[emitPosition.index].x = emitPosition.x;
+  postItems.value[emitPosition.index].y = emitPosition.y;
 }
 </script>
 
@@ -39,6 +49,7 @@ function saveSize(emitSize: EmitSizeType) {
       :postItem="postItem"
       :i="i"
       @change:size="saveSize"
+      @change:position="savePosition"
     />
   </div>
 </template>

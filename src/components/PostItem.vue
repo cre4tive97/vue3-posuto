@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { useDraggable, useElementSize, useEventListener } from "@vueuse/core";
-import { ref, reactive, onMounted } from "vue";
+import { ref, reactive, onMounted, toRefs } from "vue";
 
 const isDraggable = ref(true);
 interface Props {
@@ -13,12 +13,18 @@ interface Props {
   i: number;
 }
 const props = defineProps<Props>();
-const emits = defineEmits(["change:size"]);
+const { postItem, i } = toRefs(props);
+const emits = defineEmits(["change:size", "change:position"]);
 
 function setDraggable() {
   if (isDraggable.value) {
     sizeWidth.value = draggableWidth.value;
     sizeHeight.value = draggableHeight.value;
+    emits("change:position", {
+      x: x.value,
+      y: y.value,
+      index: props.i,
+    });
   } else {
     draggableWidth.value = sizeWidth.value;
     draggableHeight.value = sizeHeight.value;
@@ -34,13 +40,13 @@ const postDraggableElement = ref<HTMLElement | null>(null);
 const postSizeElement = ref<HTMLElement | null>(null);
 const { width: draggableWidth, height: draggableHeight } =
   useElementSize(postDraggableElement);
-draggableWidth.value = props.postItem.width;
-draggableHeight.value = props.postItem.height;
+draggableWidth.value = postItem.value.width;
+draggableHeight.value = postItem.value.height;
 
 const { width: sizeWidth, height: sizeHeight } =
   useElementSize(postSizeElement);
-sizeWidth.value = props.postItem.width;
-sizeHeight.value = props.postItem.height;
+sizeWidth.value = postItem.value.width;
+sizeHeight.value = postItem.value.height;
 
 const draggableStyle = ref(
   `width:${draggableWidth.value}px; height:${draggableHeight.value}px;`
@@ -55,14 +61,11 @@ const { x, y, style, isDragging, position } = useDraggable(
     exact: false,
     initialValue: { x: props.postItem.x, y: props.postItem.y },
     onEnd: () => {
-      console.log(
-        Math.floor(x.value),
-        y.value,
-        draggableWidth.value,
-        draggableHeight.value,
-        sizeWidth.value,
-        sizeHeight.value
-      );
+      //   emits("change:position", {
+      //     width: sizeWidth.value,
+      //     height: sizeHeight.value,
+      //     index: props.i,
+      //   });
     },
   }
 );
