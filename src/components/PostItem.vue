@@ -18,48 +18,34 @@ const emits = defineEmits(["change:size", "change:position"]);
 
 function setDraggable() {
   if (isDraggable.value) {
-    sizeWidth.value = draggableWidth.value;
-    sizeHeight.value = draggableHeight.value;
     emits("change:position", {
       x: x.value,
       y: y.value,
       index: props.i,
     });
   } else {
-    draggableWidth.value = sizeWidth.value;
-    draggableHeight.value = sizeHeight.value;
     emits("change:size", {
       width: sizeWidth.value,
       height: sizeHeight.value,
       index: props.i,
     });
   }
+  console.log(postItem.value);
   isDraggable.value = !isDraggable.value;
 }
 const postDraggableElement = ref<HTMLElement | null>(null);
 const postSizeElement = ref<HTMLElement | null>(null);
 const { width: draggableWidth, height: draggableHeight } =
   useElementSize(postDraggableElement);
-draggableWidth.value = postItem.value.width;
-draggableHeight.value = postItem.value.height;
 
 const { width: sizeWidth, height: sizeHeight } =
   useElementSize(postSizeElement);
-sizeWidth.value = postItem.value.width;
-sizeHeight.value = postItem.value.height;
-
-const draggableStyle = ref(
-  `width:${draggableWidth.value}px; height:${draggableHeight.value}px;`
-);
-const sizeStyle = ref(
-  `width:${sizeWidth.value}px; height:${sizeHeight.value}px;`
-);
 
 const { x, y, style, isDragging, position } = useDraggable(
   postDraggableElement,
   {
     exact: false,
-    initialValue: { x: props.postItem.x, y: props.postItem.y },
+    initialValue: { x: postItem.value.x, y: postItem.value.y },
     onEnd: () => {
       //   emits("change:position", {
       //     width: sizeWidth.value,
@@ -76,26 +62,28 @@ const { x, y, style, isDragging, position } = useDraggable(
       v-show="isDraggable"
       class="post__item"
       ref="postDraggableElement"
-      :style="style + draggableStyle"
+      :style="style + `width:${postItem.width}px; height:${postItem.height}px`"
       style="position: fixed"
       @dblclick="setDraggable"
     >
       <div class="post__draggable">
         {{ isDraggable }}
         {{ draggableWidth }}
+        {{ draggableHeight }}
       </div>
     </div>
     <div
       v-show="!isDraggable"
       ref="postSizeElement"
       class="post__item"
-      :style="style + sizeStyle"
+      :style="style + `width:${postItem.width}px; height:${postItem.height}px`"
       style="position: fixed; opacity: 0.7"
       @dblclick="setDraggable"
     >
       <div class="post__draggable">
         {{ isDraggable }}
         {{ sizeWidth }}
+        {{ sizeHeight }}
       </div>
     </div>
   </div>
