@@ -29,13 +29,13 @@ interface EmitPositionType {
 }
 
 function saveSize(emitSize: EmitSizeType) {
-  postItems.value[emitSize.index].width = emitSize.width;
-  postItems.value[emitSize.index].height = emitSize.height;
+  postItems.value[emitSize.index].position.width = emitSize.width;
+  postItems.value[emitSize.index].position.height = emitSize.height;
 }
 
 function savePosition(emitPosition: EmitPositionType) {
-  postItems.value[emitPosition.index].x = emitPosition.x;
-  postItems.value[emitPosition.index].y = emitPosition.y;
+  postItems.value[emitPosition.index].position.x = emitPosition.x;
+  postItems.value[emitPosition.index].position.y = emitPosition.y;
 }
 </script>
 
