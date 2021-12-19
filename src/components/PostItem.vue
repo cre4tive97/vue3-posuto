@@ -105,6 +105,14 @@ const { x, y, style, isDragging, position } = useDraggable(
             :value="postItem.title"
           />
         </form>
+        <form @submit.prevent class="post__form">
+          <textarea
+            class="post__textarea"
+            style="height: 100%"
+            :value="postItem.content"
+            placeholder="내용을 입력하세요"
+          ></textarea>
+        </form>
       </div>
     </div>
   </div>
