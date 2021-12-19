@@ -5,10 +5,14 @@ import { ref, reactive, onMounted, toRefs } from "vue";
 const isDraggable = ref(true);
 interface Props {
   postItem: {
-    x: number;
-    y: number;
-    width: number;
-    height: number;
+    title: string;
+    content: string;
+    position: {
+      x: number;
+      y: number;
+      width: number;
+      height: number;
+    };
   };
   i: number;
 }
@@ -30,7 +34,6 @@ function setDraggable() {
       index: props.i,
     });
   }
-  console.log(postItem.value);
   isDraggable.value = !isDraggable.value;
 }
 const postDraggableElement = ref<HTMLElement | null>(null);
@@ -45,9 +48,15 @@ const { x, y, style, isDragging, position } = useDraggable(
   postDraggableElement,
   {
     exact: false,
-    initialValue: { x: postItem.value.x, y: postItem.value.y },
+    initialValue: {
+      x: postItem.value.position.x,
+      y: postItem.value.position.y,
+    },
     onEnd: () => {
-      if (x.value !== postItem.value.x || y.value !== postItem.value.y) {
+      if (
+        x.value !== postItem.value.position.x ||
+        y.value !== postItem.value.position.y
+      ) {
         emits("change:position", {
           x: x.value,
           y: y.value,
@@ -62,30 +71,40 @@ const { x, y, style, isDragging, position } = useDraggable(
   <div class="post">
     <div
       v-show="isDraggable"
-      class="post__item"
+      class="post__item draggable"
       ref="postDraggableElement"
-      :style="style + `width:${postItem.width}px; height:${postItem.height}px`"
+      :style="
+        style +
+        `width:${postItem.position.width}px; height:${postItem.position.height}px`
+      "
       style="position: fixed"
       @dblclick="setDraggable"
     >
       <div class="post__draggable">
-        {{ isDraggable }}
-        {{ draggableWidth }}
-        {{ draggableHeight }}
+        {{ postItem.title }}
+        {{ postItem.content }}
       </div>
     </div>
     <div
       v-show="!isDraggable"
       ref="postSizeElement"
-      class="post__item"
-      :style="style + `width:${postItem.width}px; height:${postItem.height}px`"
+      class="post__item resizable"
+      :style="
+        style +
+        `width:${postItem.position.width}px; height:${postItem.position.height}px`
+      "
       style="position: fixed; opacity: 0.7"
       @dblclick="setDraggable"
     >
       <div class="post__draggable">
-        {{ isDraggable }}
-        {{ sizeWidth }}
-        {{ sizeHeight }}
+        <form @submit.prevent class="post__form">
+          <input
+            class="post__input"
+            type="text"
+            placeholder="제목을 입력하세요"
+            :value="postItem.title"
+          />
+        </form>
       </div>
     </div>
   </div>
@@ -102,6 +121,9 @@ const { x, y, style, isDragging, position } = useDraggable(
   overflow-wrap: break-word;
   transition: background-color 0.5s;
   resize: both;
+}
+.draggable {
+  cursor: move;
 }
 .post__header h1 {
   font-size: 1.25rem;
