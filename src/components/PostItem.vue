@@ -2,10 +2,14 @@
 import { useDraggable, useElementSize, useEventListener } from "@vueuse/core";
 import { ref, reactive, onMounted, toRefs } from "vue";
 import { Props } from "@/types/props";
+import { PostItemType } from "@/types/props";
 
 const isDraggable = ref(true);
 
-const props = defineProps<Props>();
+const props = defineProps<{
+  postItem: PostItemType;
+  i: number;
+}>();
 const { postItem, i } = toRefs(props);
 const emits = defineEmits(["change:size", "change:position"]);
 
@@ -37,6 +41,10 @@ const { x, y, style, isDragging, position } = useDraggable(
   postDraggableElement,
   {
     exact: false,
+    initialValue: {
+      x: postItem.value.position.x,
+      y: postItem.value.position.y,
+    },
     onEnd: () => {
       if (
         x.value !== postItem.value.position.x ||

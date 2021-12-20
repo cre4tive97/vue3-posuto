@@ -54,18 +54,18 @@ export interface LocalPostDataType {
   isEditing: boolean;
 }
 
-export interface PostItemType extends PostDataType {
-  createdAt: string;
-  createdBy: string;
-  updatedAt: string;
-  __v: number;
-  _id: string;
-}
+// export interface PostItemType extends PostDataType {
+//   createdAt: string;
+//   createdBy: string;
+//   updatedAt: string;
+//   __v: number;
+//   _id: string;
+// }
 
-export interface LocalPostItemType extends LocalPostDataType {
-  createdAt: string;
-  createdBy: string;
-  updatedAt: string;
-  __v: number;
-  _id: string;
-}
+// export interface LocalPostItemType extends LocalPostDataType {
+//   createdAt: string;
+//   createdBy: string;
+//   updatedAt: string;
+//   __v: number;
+//   _id: string;
+// }
