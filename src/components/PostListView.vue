@@ -1,9 +1,7 @@
 <script lang="ts" setup>
-import { ref, reactive, onUpdated, computed, toRefs } from "vue";
-import { store } from "@/store";
-import { useDraggable, useElementSize } from "@vueuse/core";
+import { toRefs } from "vue";
 import PostItem from "@/components/PostItem.vue";
-import { PostItemType, Props } from "@/types/props";
+import { PostItemType } from "@/types/props";
 import { EmitPositionType, EmitSizeType, EmitZIndexType } from "@/types/emits";
 
 const props = defineProps<{

@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { useDraggable, useElementSize, useEventListener } from "@vueuse/core";
+import { useDraggable, useElementSize } from "@vueuse/core";
 import { ref, toRefs } from "vue";
 import { PostItemType } from "@/types/props";
 
@@ -30,9 +30,6 @@ function setDraggable() {
 }
 const postDraggableElement = ref<HTMLElement | null>(null);
 const postSizeElement = ref<HTMLElement | null>(null);
-const { width: draggableWidth, height: draggableHeight } =
-  useElementSize(postDraggableElement);
-
 const { width: sizeWidth, height: sizeHeight } =
   useElementSize(postSizeElement);
 
