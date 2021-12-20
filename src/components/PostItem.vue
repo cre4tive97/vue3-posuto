@@ -130,6 +130,7 @@ const { x, y, style } = useDraggable(postDraggableElement, {
 }
 .draggable {
   cursor: move;
+  overflow-wrap: break-word;
 }
 .post__header h1 {
   font-size: 1.25rem;

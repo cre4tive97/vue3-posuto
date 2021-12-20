@@ -8,23 +8,12 @@ import { useStore } from "@/store";
 import { useRouter } from "vue-router";
 import { EmitPositionType, EmitSizeType, EmitZIndexType } from "@/types/emits";
 import { PostDataType } from "@/types/types";
+import { MutationTypes } from "@/store/mutations";
 
 const router = useRouter();
 const store = useStore();
 const settingState = ref(false);
 const isLoading = ref(false);
-// const postItems = ref<PostDataType[]>([
-//   {
-//     title: "test1",
-//     contents: "test1",
-//     position: { x: 80, y: 80, width: 200, height: 300, z: 1 },
-//   },
-//   {
-//     title: "test2",
-//     contents: "test2",
-//     position: { x: 350, y: 250, width: 250, height: 250, z: 1 },
-//   },
-// ]);
 const postItems = ref<PostDataType[]>([]);
 
 function saveSize(emitSize: EmitSizeType) {
@@ -56,12 +45,32 @@ async function createFirstAccessDefaultPost() {
     await addPostData({
       title: "Hello Posuto!",
       contents: `Posuto를 사용해주셔서 감사합니다!
-          우측 하단의 포스트 버튼을 누르면 새로운 포스트를 생성할 수 있습니다.
-          설정 버튼을 누르면 포스트의 색상을 변경할 수 있습니다.`,
+      포스트를 더블클릭하여 드래그/수정 모드로 전환할 수 있습니다.
+      우측 하단의 포스트 버튼을 누르면 새로운 포스트를 생성할 수 있습니다.
+      설정 버튼을 누르면 포스트의 색상을 변경할 수 있습니다.`,
+      position: { width: 500, height: 500, x: 50, y: 50, z: 1 },
+      isDraggable: false,
+    });
+    postItems.value.push({
+      title: "Hello Posuto!",
+      contents: `Posuto를 사용해주셔서 감사합니다!
+      포스트를 더블클릭하여 드래그/수정 모드로 전환할 수 있습니다.
+      우측 하단의 포스트 버튼을 누르면 새로운 포스트를 생성할 수 있습니다.
+      설정 버튼을 누르면 포스트의 색상을 변경할 수 있습니다.`,
       position: { width: 500, height: 500, x: 50, y: 50, z: 1 },
       isDraggable: false,
     });
   }
+}
+
+// 메인페이지 최초 접속시 localStorage에 기록 남김
+function setAccessRecord() {
+  if (!localStorage.getItem("access")) localStorage.setItem("access", "true");
+}
+// PostItems 비어있으면 스토어에 체크함
+function postItemsEmptyCheck() {
+  if (postItems.value.length === 0)
+    store.commit(MutationTypes.SET_POST_EMPTY_STATUS, true);
 }
 
 async function fetchPostData() {
@@ -69,6 +78,9 @@ async function fetchPostData() {
     isLoading.value = true;
     const { data } = await getPostData();
     postItems.value = data.posts;
+    postItemsEmptyCheck();
+    await createFirstAccessDefaultPost();
+    setAccessRecord();
   } catch (error) {
     console.log(error);
   } finally {
