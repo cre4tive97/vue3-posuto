@@ -8,3 +8,8 @@ export interface EmitPositionType {
   y: number;
   index: number;
 }
+
+export interface EmitZIndexType {
+  z: number;
+  index: number;
+}

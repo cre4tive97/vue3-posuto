@@ -6,11 +6,12 @@ export interface Props {
 
 export interface PostItemType {
   title: string;
-  content: string;
+  contents: string;
   position: {
     x: number;
     y: number;
     width: number;
     height: number;
+    z: number;
   };
 }

@@ -4,13 +4,13 @@ import { store } from "@/store";
 import { useDraggable, useElementSize } from "@vueuse/core";
 import PostItem from "@/components/PostItem.vue";
 import { PostItemType, Props } from "@/types/props";
-import { EmitPositionType, EmitSizeType } from "@/types/emits";
+import { EmitPositionType, EmitSizeType, EmitZIndexType } from "@/types/emits";
 
 const props = defineProps<{
   postItems: PostItemType[];
 }>();
 
-const emits = defineEmits(["change:size", "change:position"]);
+const emits = defineEmits(["change:size", "change:position", "focus:z-index"]);
 
 const { postItems } = toRefs(props);
 
@@ -19,6 +19,9 @@ function emitChangeSize(size: EmitSizeType) {
 }
 function emitChangePosition(position: EmitPositionType) {
   emits("change:position", position);
+}
+function emitFocusZIndex(index: EmitZIndexType) {
+  emits("focus:z-index", index);
 }
 </script>
 
@@ -31,6 +34,7 @@ function emitChangePosition(position: EmitPositionType) {
       :i="i"
       @change:size="emitChangeSize"
       @change:position="emitChangePosition"
+      @focus:z-index="emitFocusZIndex"
     />
   </div>
 </template>

@@ -1,7 +1,6 @@
 <script lang="ts" setup>
 import { useDraggable, useElementSize, useEventListener } from "@vueuse/core";
-import { ref, reactive, onMounted, toRefs } from "vue";
-import { Props } from "@/types/props";
+import { ref, toRefs } from "vue";
 import { PostItemType } from "@/types/props";
 
 const isDraggable = ref(true);
@@ -11,7 +10,7 @@ const props = defineProps<{
   i: number;
 }>();
 const { postItem, i } = toRefs(props);
-const emits = defineEmits(["change:size", "change:position"]);
+const emits = defineEmits(["change:size", "change:position", "focus:z-index"]);
 
 function setDraggable() {
   if (isDraggable.value) {
@@ -37,28 +36,31 @@ const { width: draggableWidth, height: draggableHeight } =
 const { width: sizeWidth, height: sizeHeight } =
   useElementSize(postSizeElement);
 
-const { x, y, style, isDragging, position } = useDraggable(
-  postDraggableElement,
-  {
-    exact: false,
-    initialValue: {
-      x: postItem.value.position.x,
-      y: postItem.value.position.y,
-    },
-    onEnd: () => {
-      if (
-        x.value !== postItem.value.position.x ||
-        y.value !== postItem.value.position.y
-      ) {
-        emits("change:position", {
-          x: x.value,
-          y: y.value,
-          index: props.i,
-        });
-      }
-    },
-  }
-);
+const { x, y, style } = useDraggable(postDraggableElement, {
+  exact: false,
+  initialValue: {
+    x: postItem.value.position.x,
+    y: postItem.value.position.y,
+  },
+  onStart: () => {
+    emits("focus:z-index", {
+      z: 2,
+      index: i.value,
+    });
+  },
+  onEnd: () => {
+    if (
+      x.value !== postItem.value.position.x ||
+      y.value !== postItem.value.position.y
+    ) {
+      emits("change:position", {
+        x: x.value,
+        y: y.value,
+        index: i.value,
+      });
+    }
+  },
+});
 </script>
 <template>
   <div class="post">
@@ -68,7 +70,7 @@ const { x, y, style, isDragging, position } = useDraggable(
       ref="postDraggableElement"
       :style="
         style +
-        `width:${postItem.position.width}px; height:${postItem.position.height}px`
+        `width:${postItem.position.width}px; height:${postItem.position.height}px; z-index:${postItem.position.z}`
       "
       style="position: fixed"
       @dblclick="setDraggable"
@@ -79,7 +81,7 @@ const { x, y, style, isDragging, position } = useDraggable(
         </div>
         <hr />
         <div>
-          {{ postItem.content }}
+          {{ postItem.contents }}
         </div>
       </div>
     </div>
@@ -89,7 +91,7 @@ const { x, y, style, isDragging, position } = useDraggable(
       class="post__item resizable"
       :style="
         style +
-        `width:${postItem.position.width}px; height:${postItem.position.height}px`
+        `width:${postItem.position.width}px; height:${postItem.position.height}px; z-index:${postItem.position.z}`
       "
       style="position: fixed; opacity: 0.7"
       @dblclick="setDraggable"
@@ -108,7 +110,7 @@ const { x, y, style, isDragging, position } = useDraggable(
           <textarea
             class="post__textarea"
             style="height: 100%"
-            :value="postItem.content"
+            :value="postItem.contents"
             placeholder="내용을 입력하세요"
           ></textarea>
         </form>
