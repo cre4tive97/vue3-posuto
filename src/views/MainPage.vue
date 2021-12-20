@@ -14,12 +14,12 @@ const postItems = ref([
   {
     title: "test1",
     content: "test1",
-    position: { x: 80, y: 80, width: 50, height: 70 },
+    position: { x: 80, y: 80, width: 200, height: 300 },
   },
   {
     title: "test2",
     content: "test2",
-    position: { x: 150, y: 250, width: 60, height: 70 },
+    position: { x: 350, y: 250, width: 250, height: 250 },
   },
 ]);
 
@@ -48,8 +48,8 @@ function savePosition(emitPosition: EmitPositionType) {
   <Spinner v-if="isLoading" />
   <PostListView
     :postItems="postItems"
-    @save:size="saveSize"
-    @save:position="savePosition"
+    @change:size="saveSize"
+    @change:position="savePosition"
   />
   <transition name="settingAnimation">
     <AppSetting v-if="settingState" />

@@ -4,32 +4,22 @@ import { store } from "@/store";
 import { useDraggable, useElementSize } from "@vueuse/core";
 import PostItem from "@/components/PostItem.vue";
 import { PostItemType, Props } from "@/types/props";
+import { EmitPositionType, EmitSizeType } from "@/types/emits";
 
 const props = defineProps<{
   postItems: PostItemType[];
 }>();
+
+const emits = defineEmits(["change:size", "change:position"]);
+
 const { postItems } = toRefs(props);
 
-// interface EmitSizeType {
-//   width: number;
-//   height: number;
-//   index: number;
-// }
-// interface EmitPositionType {
-//   x: number;
-//   y: number;
-//   index: number;
-// }
-
-// function saveSize(emitSize: EmitSizeType) {
-//   postItems.value[emitSize.index].position.width = emitSize.width;
-//   postItems.value[emitSize.index].position.height = emitSize.height;
-// }
-
-// function savePosition(emitPosition: EmitPositionType) {
-//   postItems.value[emitPosition.index].position.x = emitPosition.x;
-//   postItems.value[emitPosition.index].position.y = emitPosition.y;
-// }
+function emitChangeSize(size: EmitSizeType) {
+  emits("change:size", size);
+}
+function emitChangePosition(position: EmitPositionType) {
+  emits("change:position", position);
+}
 </script>
 
 <template>
@@ -39,8 +29,8 @@ const { postItems } = toRefs(props);
       :key="i"
       :postItem="postItem"
       :i="i"
-      @change:size="$emit('change:size')"
-      @change:position="$emit('change:position')"
+      @change:size="emitChangeSize"
+      @change:position="emitChangePosition"
     />
   </div>
 </template>

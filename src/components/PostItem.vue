@@ -74,8 +74,13 @@ const { x, y, style, isDragging, position } = useDraggable(
       @dblclick="setDraggable"
     >
       <div class="post__draggable">
-        {{ postItem.title }}
-        {{ postItem.content }}
+        <div>
+          {{ postItem.title }}
+        </div>
+        <hr />
+        <div>
+          {{ postItem.content }}
+        </div>
       </div>
     </div>
     <div
@@ -98,6 +103,7 @@ const { x, y, style, isDragging, position } = useDraggable(
             :value="postItem.title"
           />
         </form>
+        <hr />
         <form @submit.prevent class="post__form">
           <textarea
             class="post__textarea"
