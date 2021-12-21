@@ -142,6 +142,7 @@ async function deletePost(postId: string) {
     @change:size="saveSize"
     @change:position="savePosition"
     @focus:z-index="setZIndex"
+    @delete:post="deletePost"
   />
   <transition name="settingAnimation">
     <AppSetting v-if="settingState" />

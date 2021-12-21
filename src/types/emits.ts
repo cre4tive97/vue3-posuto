@@ -13,3 +13,7 @@ export interface EmitZIndexType {
   z: number;
   index: number;
 }
+
+export interface EmitIdType {
+  _id: string;
+}

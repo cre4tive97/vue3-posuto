@@ -2,13 +2,23 @@
 import { toRefs } from "vue";
 import PostItem from "@/components/PostItem.vue";
 import { PostItemType } from "@/types/props";
-import { EmitPositionType, EmitSizeType, EmitZIndexType } from "@/types/emits";
+import {
+  EmitPositionType,
+  EmitSizeType,
+  EmitZIndexType,
+  EmitIdType,
+} from "@/types/emits";
 
 const props = defineProps<{
   postItems: PostItemType[];
 }>();
 
-const emits = defineEmits(["change:size", "change:position", "focus:z-index"]);
+const emits = defineEmits([
+  "change:size",
+  "change:position",
+  "focus:z-index",
+  "delete:post",
+]);
 
 const { postItems } = toRefs(props);
 
@@ -20,6 +30,9 @@ function emitChangePosition(position: EmitPositionType) {
 }
 function emitFocusZIndex(index: EmitZIndexType) {
   emits("focus:z-index", index);
+}
+function emitDeletePost(_id: EmitIdType) {
+  emits("delete:post", _id);
 }
 </script>
 
@@ -33,6 +46,7 @@ function emitFocusZIndex(index: EmitZIndexType) {
       @change:size="emitChangeSize"
       @change:position="emitChangePosition"
       @focus:z-index="emitFocusZIndex"
+      @delete:post="emitDeletePost"
     />
   </div>
 </template>
