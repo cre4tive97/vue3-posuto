@@ -73,11 +73,13 @@ const { x, y, style } = useDraggable(postDraggableElement, {
       @dblclick="setDraggable"
     >
       <div class="post__draggable">
-        <div>
-          {{ postItem.title }}
+        <div class="post__header">
+          <h1>
+            {{ postItem.title }}
+          </h1>
         </div>
         <hr />
-        <div>
+        <div class="post__content">
           {{ postItem.contents }}
         </div>
       </div>
@@ -94,23 +96,27 @@ const { x, y, style } = useDraggable(postDraggableElement, {
       @dblclick="setDraggable"
     >
       <div class="post__draggable">
-        <form @submit.prevent class="post__form">
-          <input
-            class="post__input"
-            type="text"
-            placeholder="제목을 입력하세요"
-            :value="postItem.title"
-          />
-        </form>
+        <div class="post__header">
+          <form @submit.prevent class="post__form">
+            <input
+              class="post__input"
+              type="text"
+              placeholder="제목을 입력하세요"
+              :value="postItem.title"
+            />
+          </form>
+        </div>
         <hr />
-        <form @submit.prevent class="post__form">
-          <textarea
-            class="post__textarea"
-            style="height: 100%"
-            :value="postItem.contents"
-            placeholder="내용을 입력하세요"
-          ></textarea>
-        </form>
+        <div class="content">
+          <form @submit.prevent class="post__form">
+            <textarea
+              class="post__textarea"
+              style="height: 100%"
+              :value="postItem.contents"
+              placeholder="내용을 입력하세요"
+            ></textarea>
+          </form>
+        </div>
       </div>
     </div>
   </div>
@@ -127,6 +133,9 @@ const { x, y, style } = useDraggable(postDraggableElement, {
   overflow-wrap: break-word;
   transition: background-color 0.5s;
   resize: both;
+}
+.post__draggable {
+  height: 100%;
 }
 .draggable {
   cursor: move;
@@ -166,10 +175,14 @@ const { x, y, style } = useDraggable(postDraggableElement, {
   outline: none;
   cursor: text;
 }
-
+.content {
+  height: 75%;
+  font-weight: 400;
+}
 .hidden {
   display: none;
 }
+
 .post__form {
   height: 80%;
 }
