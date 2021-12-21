@@ -94,6 +94,29 @@ async function fetchPostData() {
     isLoading.value = false;
   }
 }
+
+// 포스트 생성
+async function createNewPost() {
+  try {
+    // 디폴트 포스트를 생성
+    await addPostData({
+      title: "",
+      contents: "",
+      position: { width: 300, height: 300, x: 100, y: 100, z: 1 },
+      isDraggable: false,
+    });
+    // Refresh (gridStack reload)
+    await fetchPostData();
+  } catch (error) {
+    if (axios.isAxiosError(error) && error.response?.status === 400) {
+      alert("새로운 포스트가 이미 존재합니다.");
+    } else if (axios.isAxiosError(error) && error.response?.status === 500) {
+      alert(
+        "서버에 문제가 있어 포스트를 생성하지 못했습니다. 잠시 후 다시 시도해주세요."
+      );
+    }
+  }
+}
 </script>
 <template>
   <Spinner v-if="isLoading" />
@@ -106,4 +129,10 @@ async function fetchPostData() {
   <transition name="settingAnimation">
     <AppSetting v-if="settingState" />
   </transition>
+  <button class="add__btn" @click="createNewPost">
+    <i class="far fa-sticky-note"></i>
+  </button>
+  <button class="setting__btn" @click="settingState = !settingState">
+    <i class="fas fa-cog"></i>
+  </button>
 </template>
