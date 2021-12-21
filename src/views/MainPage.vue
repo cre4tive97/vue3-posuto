@@ -6,7 +6,12 @@ import { getPostData, addPostData, deletePostData } from "@/api/posts";
 import { ref } from "vue";
 import { useRouter } from "vue-router";
 import { useStore } from "@/store";
-import { EmitPositionType, EmitSizeType, EmitZIndexType } from "@/types/emits";
+import {
+  EmitChangeDraggableStatusType,
+  EmitPositionType,
+  EmitSizeType,
+  EmitZIndexType,
+} from "@/types/emits";
 import { PostDataType } from "@/types/types";
 import { MutationTypes } from "@/store/mutations";
 import axios from "axios";
@@ -134,6 +139,10 @@ async function deletePost(postId: string) {
     }
   }
 }
+// 드래그 가능 토글
+function toggleDraggableStatus(draggableStatus: EmitChangeDraggableStatusType) {
+  postItems.value[draggableStatus.index].isDraggable = draggableStatus.status;
+}
 </script>
 <template>
   <Spinner v-if="isLoading" />
@@ -143,6 +152,7 @@ async function deletePost(postId: string) {
     @change:position="savePosition"
     @focus:z-index="setZIndex"
     @delete:post="deletePost"
+    @change:draggableStatus="toggleDraggableStatus"
   />
   <transition name="settingAnimation">
     <AppSetting v-if="settingState" />

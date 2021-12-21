@@ -13,6 +13,7 @@ export interface PostItemType {
   title: string;
   contents: string;
   position: Position;
+  isDraggable: boolean;
   __v?: number;
   _id?: string;
   createdAt?: string;

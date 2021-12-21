@@ -3,8 +3,6 @@ import { useDraggable, useElementSize } from "@vueuse/core";
 import { ref, toRefs } from "vue";
 import { PostItemType } from "@/types/props";
 
-const isDraggable = ref(true);
-
 const props = defineProps<{
   postItem: PostItemType;
   i: number;
@@ -15,10 +13,11 @@ const emits = defineEmits([
   "change:position",
   "focus:z-index",
   "delete:post",
+  "change:draggableStatus",
 ]);
 
 function setDraggable() {
-  if (isDraggable.value) {
+  if (postItem.value.isDraggable) {
     emits("change:position", {
       x: x.value,
       y: y.value,
@@ -31,7 +30,11 @@ function setDraggable() {
       index: props.i,
     });
   }
-  isDraggable.value = !isDraggable.value;
+  const draggableStatus = {
+    status: !postItem.value.isDraggable,
+    index: i.value,
+  };
+  emits("change:draggableStatus", draggableStatus);
 }
 const postDraggableElement = ref<HTMLElement | null>(null);
 const postSizeElement = ref<HTMLElement | null>(null);
@@ -63,20 +66,23 @@ const { x, y, style } = useDraggable(postDraggableElement, {
     }
   },
 });
-const btnGroup = ref<HTMLDivElement>();
+const btnGroupDraggable = ref<HTMLDivElement>();
+const btnGroupSizable = ref<HTMLDivElement>();
 // 포스트 위에 마우스 올릴 시 버튼을 보여줌
-function onMouseOver() {
-  if (btnGroup.value) btnGroup.value.classList.remove("hidden");
+function onMouseOver(el: HTMLDivElement | undefined) {
+  if (el) el.classList.remove("hidden");
 }
 // 포스트 위에서 마우스가 사라지면 버튼을 사라지게 함
-function onMouseLeave() {
-  if (btnGroup.value) btnGroup.value.classList.add("hidden");
+function onMouseLeave(el: HTMLDivElement | undefined) {
+  if (el) el.classList.add("hidden");
 }
 </script>
 <template>
-  <div class="post" @mouseover="onMouseOver" @mouseleave="onMouseLeave">
+  <div class="post">
     <div
-      v-show="isDraggable"
+      @mouseover="onMouseOver(btnGroupDraggable)"
+      @mouseleave="onMouseLeave(btnGroupDraggable)"
+      v-show="postItem.isDraggable"
       class="post__item draggable"
       ref="postDraggableElement"
       :style="
@@ -91,13 +97,7 @@ function onMouseLeave() {
           <h1>
             {{ postItem.title }}
           </h1>
-          <div ref="btnGroup" class="post__btnGroup hidden">
-            <!-- <i
-              v-if="postItem.isDraggable"
-              @click="emitFinishEditing(i, postItem)"
-              class="fas fa-edit"
-            ></i>
-            <i v-else @click="emitStartEditing(i)" class="far fa-edit"></i> -->
+          <div ref="btnGroupDraggable" class="post__btnGroup hidden">
             <i
               class="far fa-trash-alt"
               @click="$emit('delete:post', postItem._id)"
@@ -111,7 +111,9 @@ function onMouseLeave() {
       </div>
     </div>
     <div
-      v-show="!isDraggable"
+      @mouseover="onMouseOver(btnGroupSizable)"
+      @mouseleave="onMouseLeave(btnGroupSizable)"
+      v-show="!postItem.isDraggable"
       ref="postSizeElement"
       class="post__item resizable"
       :style="
@@ -131,6 +133,12 @@ function onMouseLeave() {
               :value="postItem.title"
             />
           </form>
+          <div ref="btnGroupSizable" class="post__btnGroup hidden">
+            <i
+              class="far fa-trash-alt"
+              @click="$emit('delete:post', postItem._id)"
+            ></i>
+          </div>
         </div>
         <hr />
         <div class="content">
