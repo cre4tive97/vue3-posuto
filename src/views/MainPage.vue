@@ -3,12 +3,13 @@ import PostListView from "@/components/PostListView.vue";
 import AppSetting from "@/components/common/AppSetting.vue";
 import Spinner from "@/components/common/Spinner.vue";
 import { getPostData, addPostData } from "@/api/posts";
-import { reactive, ref } from "vue";
-import { useStore } from "@/store";
+import { ref } from "vue";
 import { useRouter } from "vue-router";
+import { useStore } from "@/store";
 import { EmitPositionType, EmitSizeType, EmitZIndexType } from "@/types/emits";
 import { PostDataType } from "@/types/types";
 import { MutationTypes } from "@/store/mutations";
+import axios from "axios";
 
 const router = useRouter();
 const store = useStore();
@@ -62,6 +63,8 @@ async function createFirstAccessDefaultPost() {
     });
   }
 }
+// created
+fetchPostData();
 
 // 메인페이지 최초 접속시 localStorage에 기록 남김
 function setAccessRecord() {
@@ -73,21 +76,24 @@ function postItemsEmptyCheck() {
     store.commit(MutationTypes.SET_POST_EMPTY_STATUS, true);
 }
 
+// 전체 포스트 조회
 async function fetchPostData() {
   try {
+    // 스피너 ON
     isLoading.value = true;
+    // 포스트 데이터 로드
     const { data } = await getPostData();
     postItems.value = data.posts;
     postItemsEmptyCheck();
     await createFirstAccessDefaultPost();
     setAccessRecord();
   } catch (error) {
-    console.log(error);
+    if (axios.isAxiosError(error) && error.response?.status === 401)
+      router.push("/login");
   } finally {
     isLoading.value = false;
   }
 }
-fetchPostData();
 </script>
 <template>
   <Spinner v-if="isLoading" />
