@@ -10,7 +10,12 @@ const props = defineProps<{
   i: number;
 }>();
 const { postItem, i } = toRefs(props);
-const emits = defineEmits(["change:size", "change:position", "focus:z-index"]);
+const emits = defineEmits([
+  "change:size",
+  "change:position",
+  "focus:z-index",
+  "delete:post",
+]);
 
 function setDraggable() {
   if (isDraggable.value) {
@@ -58,9 +63,18 @@ const { x, y, style } = useDraggable(postDraggableElement, {
     }
   },
 });
+const btnGroup = ref<HTMLDivElement>();
+// 포스트 위에 마우스 올릴 시 버튼을 보여줌
+function onMouseOver() {
+  if (btnGroup.value) btnGroup.value.classList.remove("hidden");
+}
+// 포스트 위에서 마우스가 사라지면 버튼을 사라지게 함
+function onMouseLeave() {
+  if (btnGroup.value) btnGroup.value.classList.add("hidden");
+}
 </script>
 <template>
-  <div class="post">
+  <div class="post" @mouseover="onMouseOver" @mouseleave="onMouseLeave">
     <div
       v-show="isDraggable"
       class="post__item draggable"
@@ -77,6 +91,18 @@ const { x, y, style } = useDraggable(postDraggableElement, {
           <h1>
             {{ postItem.title }}
           </h1>
+          <div ref="btnGroup" class="post__btnGroup hidden">
+            <!-- <i
+              v-if="postItem.isDraggable"
+              @click="emitFinishEditing(i, postItem)"
+              class="fas fa-edit"
+            ></i>
+            <i v-else @click="emitStartEditing(i)" class="far fa-edit"></i> -->
+            <i
+              class="far fa-trash-alt"
+              @click="$emit('delete:post', postItem._id)"
+            ></i>
+          </div>
         </div>
         <hr />
         <div class="post__content">

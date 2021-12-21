@@ -13,4 +13,9 @@ export interface PostItemType {
   title: string;
   contents: string;
   position: Position;
+  __v?: number;
+  _id?: string;
+  createdAt?: string;
+  createdBy?: string;
+  updatedAt?: string;
 }
