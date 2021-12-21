@@ -2,7 +2,7 @@
 import PostListView from "@/components/PostListView.vue";
 import AppSetting from "@/components/common/AppSetting.vue";
 import Spinner from "@/components/common/Spinner.vue";
-import { getPostData, addPostData } from "@/api/posts";
+import { getPostData, addPostData, deletePostData } from "@/api/posts";
 import { ref } from "vue";
 import { useRouter } from "vue-router";
 import { useStore } from "@/store";
@@ -105,7 +105,6 @@ async function createNewPost() {
       position: { width: 300, height: 300, x: 100, y: 100, z: 1 },
       isDraggable: false,
     });
-    // Refresh (gridStack reload)
     await fetchPostData();
   } catch (error) {
     if (axios.isAxiosError(error) && error.response?.status === 400) {
@@ -113,6 +112,24 @@ async function createNewPost() {
     } else if (axios.isAxiosError(error) && error.response?.status === 500) {
       alert(
         "서버에 문제가 있어 포스트를 생성하지 못했습니다. 잠시 후 다시 시도해주세요."
+      );
+    }
+  }
+}
+
+// 포스트 삭제
+async function deletePost(postId: string) {
+  try {
+    await deletePostData(postId);
+    fetchPostData();
+  } catch (error) {
+    if (axios.isAxiosError(error) && error.response?.status === 400) {
+      alert("포스트를 삭제할 수 없습니다.");
+    } else if (axios.isAxiosError(error) && error?.response?.status === 404) {
+      alert("포스트를 찾을 수 없습니다.");
+    } else if (axios.isAxiosError(error) && error?.response?.status === 500) {
+      alert(
+        "서버에 문제가 있어 포스트를 삭제하지 못했습니다. 잠시 후 다시 시도해주세요."
       );
     }
   }
