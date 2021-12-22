@@ -24,10 +24,12 @@ const title = ref(postItem.value.title);
 const contents = ref(postItem.value.contents);
 
 function matchTitle(e: Event) {
-  title.value = e.target.value;
+  const target = e.target as HTMLInputElement;
+  title.value = target.value;
 }
 function matchContents(e: Event) {
-  contents.value = e.target.value;
+  const target = e.target as HTMLTextAreaElement;
+  contents.value = target.value;
 }
 
 // Draggable 토글
