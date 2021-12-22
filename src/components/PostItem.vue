@@ -25,51 +25,76 @@ const emits = defineEmits([
 const title = ref(postItem.value.title);
 const contents = ref(postItem.value.contents);
 
+// title state와 title input value 일치화
 function matchTitle(e: Event) {
   const target = e.target as HTMLInputElement;
   title.value = target.value;
 }
+// contents state와 contents textarea value 일치화
 function matchContents(e: Event) {
   const target = e.target as HTMLTextAreaElement;
   contents.value = target.value;
 }
 
-// Draggable 토글
-function setDraggable() {
-  const draggableStatus = {
-    status: !postItem.value.isDraggable,
-    index: i.value,
-  };
+// 현재 title이 props로 받은 title과 다르다면 emit
+function emitChangeTitle() {
   const titleData = {
     title: title.value,
     index: i.value,
   };
+  if (title.value !== postItem.value.title) {
+    emits("change:title", titleData);
+  }
+}
+
+// 현재 contents가 props로 받은 contents와 다르다면 emit
+function emitChangeContents() {
   const contentsData = {
     contents: contents.value,
     index: i.value,
   };
-
-  if (title.value !== postItem.value.title) {
-    emits("change:title", titleData);
-  }
   if (contents.value !== postItem.value.contents) {
     emits("change:contents", contentsData);
   }
-  if (postItem.value.isDraggable) {
-    emits("change:position", {
-      x: x.value,
-      y: y.value,
-      index: i.value,
-    });
-  } else {
-    emits("change:size", {
-      width: sizeWidth.value,
-      height: sizeHeight.value,
-      index: i.value,
-    });
+}
+
+// 드래그 불가능 && width 또는 height가 props로 받은 width 또는 height와 다르다면 emit
+function emitChangeSize() {
+  const sizeData = {
+    width: sizeWidth.value,
+    height: sizeHeight.value,
+    index: i.value,
+  };
+  if (
+    !postItem.value.isDraggable &&
+    (sizeWidth.value !== postItem.value.position.width ||
+      sizeHeight.value !== postItem.value.position.height)
+  ) {
+    emits("change:size", sizeData);
   }
+}
+
+// 드래그 상태 토글
+function emitChangeDraggableStatus() {
+  const draggableStatus = {
+    status: !postItem.value.isDraggable,
+    index: i.value,
+  };
   emits("change:draggableStatus", draggableStatus);
-  if (postItem.value.isDraggable === true) emits("save:post", i.value);
+}
+
+// 드래그 가능한 상태라면 포스트 저장 emit
+function emitSavePost() {
+  if (postItem.value.isDraggable) emits("save:post", i.value);
+}
+
+// Draggable 토글
+function setDraggable() {
+  emitChangeTitle();
+  emitChangeContents();
+  emitChangeSize();
+  emitChangeDraggableStatus();
+  emitSavePost();
 }
 
 // useDraggable / useElementSize
@@ -97,11 +122,13 @@ const { x, y, style } = useDraggable(postDraggableElement, {
       x.value !== postItem.value.position.x ||
       y.value !== postItem.value.position.y
     ) {
+      // x 또는 y가 props로 받은 x 또는 y와 다르다면 emit
       emits("change:position", {
         x: x.value,
         y: y.value,
         index: i.value,
       });
+      // props 변경 후 emit
       emits("save:post", i.value);
     }
   },
