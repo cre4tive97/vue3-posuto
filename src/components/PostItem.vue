@@ -102,6 +102,7 @@ const { x, y, style } = useDraggable(postDraggableElement, {
         y: y.value,
         index: i.value,
       });
+      emits("save:post", i.value);
     }
   },
 });

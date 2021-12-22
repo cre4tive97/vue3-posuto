@@ -171,7 +171,6 @@ async function editPost(i: number) {
   const postData = postItems.value[i];
   try {
     if (postData._id) await updatePostData(postData._id, postData);
-    fetchPostData();
   } catch (error) {
     if (axios.isAxiosError(error) && error.response?.status === 400) {
       alert("이미 같은 포스트가 존재합니다.");
