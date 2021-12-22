@@ -37,7 +37,6 @@ function matchContents(e: Event) {
 }
 
 function emitDeletePost() {
-  console.log(postItem.value._id);
   emits("delete:post", postItem.value._id);
 }
 
@@ -116,10 +115,12 @@ const { x, y, style } = useDraggable(postDraggableElement, {
   },
   // 클릭한 엘레먼트의 z-index를 최상위로 올림
   onStart: () => {
-    emits("focus:z-index", {
-      z: 2,
-      index: i.value,
-    });
+    if (postItem.value.position.z === 1) {
+      emits("focus:z-index", {
+        z: 2,
+        index: i.value,
+      });
+    }
   },
   // 드래그 종료시 position 값을 emit
   onEnd: () => {
@@ -237,10 +238,12 @@ function onMouseLeave(el: HTMLDivElement | undefined) {
   overflow: auto;
   overflow-wrap: break-word;
   transition: background-color 0.5s;
-  resize: both;
 }
 .post__draggable {
   height: 100%;
+}
+.resizable {
+  resize: both;
 }
 .draggable {
   cursor: move;

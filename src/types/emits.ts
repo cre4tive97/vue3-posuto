@@ -14,9 +14,7 @@ export interface EmitZIndexType {
   index: number;
 }
 
-export interface EmitIdType {
-  _id: string;
-}
+export type EmitIdType = string;
 
 export interface EmitChangeDraggableStatusType {
   status: boolean;

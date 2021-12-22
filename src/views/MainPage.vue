@@ -15,6 +15,7 @@ import {
   EmitChangeContents,
   EmitChangeDraggableStatusType,
   EmitChangeTitle,
+  EmitIdType,
   EmitPositionType,
   EmitSizeType,
   EmitZIndexType,
@@ -129,10 +130,9 @@ async function fetchPostData() {
 // 포스트 생성
 async function createNewPost() {
   try {
-    // 디폴트 포스트를 생성
     await addPostData({
-      title: "test",
-      contents: "test",
+      title: "",
+      contents: "",
       position: { width: 300, height: 300, x: 100, y: 100, z: 1 },
       isDraggable: false,
     });
@@ -149,10 +149,13 @@ async function createNewPost() {
 }
 
 // 포스트 삭제
-async function deletePost(postId: string) {
+async function deletePost(_id: EmitIdType) {
   try {
-    await deletePostData(postId);
-    fetchPostData();
+    if (_id) await deletePostData(_id);
+    postItems.value = postItems.value.filter((item) => {
+      return item._id !== _id;
+    });
+    await fetchPostData();
   } catch (error) {
     if (axios.isAxiosError(error) && error.response?.status === 400) {
       alert("포스트를 삭제할 수 없습니다.");
