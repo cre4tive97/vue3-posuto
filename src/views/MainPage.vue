@@ -12,7 +12,9 @@ import { ref } from "vue";
 import { useRouter } from "vue-router";
 import { useStore } from "@/store";
 import {
+  EmitChangeContents,
   EmitChangeDraggableStatusType,
+  EmitChangeTitle,
   EmitPositionType,
   EmitSizeType,
   EmitZIndexType,
@@ -47,6 +49,14 @@ function setZIndex(emitZIndex: EmitZIndexType) {
 
 function initZIndex() {
   postItems.value.forEach((item) => (item.position.z = 1));
+}
+
+function changeTitle(emitTitleData: EmitChangeTitle) {
+  postItems.value[emitTitleData.index].title = emitTitleData.title;
+}
+
+function changeContents(emitContentsData: EmitChangeContents) {
+  postItems.value[emitContentsData.index].contents = emitContentsData.contents;
 }
 
 // created
@@ -160,7 +170,6 @@ async function deletePost(postId: string) {
 async function editPost(i: number) {
   const postData = postItems.value[i];
   try {
-    console.log(postData);
     if (postData._id) await updatePostData(postData._id, postData);
     fetchPostData();
   } catch (error) {
@@ -186,6 +195,8 @@ async function editPost(i: number) {
     @delete:post="deletePost"
     @change:draggableStatus="toggleDraggableStatus"
     @save:post="editPost"
+    @change:title="changeTitle"
+    @change:contents="changeContents"
   />
   <transition name="settingAnimation">
     <AppSetting v-if="settingState" />

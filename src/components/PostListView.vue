@@ -9,6 +9,8 @@ import {
   EmitIdType,
   EmitChangeDraggableStatusType,
   EmitSavePostType,
+  EmitChangeTitle,
+  EmitChangeContents,
 } from "@/types/emits";
 
 // Props
@@ -25,6 +27,8 @@ const emits = defineEmits([
   "delete:post",
   "change:draggableStatus",
   "save:post",
+  "change:title",
+  "change:contents",
 ]);
 
 function emitChangeSize(size: EmitSizeType) {
@@ -47,6 +51,12 @@ function emitChangeDraggableStatus(
 function emitSavePost(index: EmitSavePostType) {
   emits("save:post", index);
 }
+function emitChangeTitle(titleData: EmitChangeTitle) {
+  emits("change:title", titleData);
+}
+function emitChangeContents(contentsData: EmitChangeContents) {
+  emits("change:contents", contentsData);
+}
 </script>
 
 <template>
@@ -62,6 +72,8 @@ function emitSavePost(index: EmitSavePostType) {
       @delete:post="emitDeletePost"
       @change:draggableStatus="emitChangeDraggableStatus"
       @save:post="emitSavePost"
+      @change:title="emitChangeTitle"
+      @change:contents="emitChangeContents"
     />
   </div>
 </template>

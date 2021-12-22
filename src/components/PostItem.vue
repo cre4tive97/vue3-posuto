@@ -17,6 +17,8 @@ const emits = defineEmits([
   "delete:post",
   "change:draggableStatus",
   "save:post",
+  "change:title",
+  "change:contents",
 ]);
 
 // State
@@ -34,6 +36,25 @@ function matchContents(e: Event) {
 
 // Draggable 토글
 function setDraggable() {
+  const draggableStatus = {
+    status: !postItem.value.isDraggable,
+    index: i.value,
+  };
+  const titleData = {
+    title: title.value,
+    index: i.value,
+  };
+  const contentsData = {
+    contents: contents.value,
+    index: i.value,
+  };
+
+  if (title.value !== postItem.value.title) {
+    emits("change:title", titleData);
+  }
+  if (contents.value !== postItem.value.contents) {
+    emits("change:contents", contentsData);
+  }
   if (postItem.value.isDraggable) {
     emits("change:position", {
       x: x.value,
@@ -47,12 +68,8 @@ function setDraggable() {
       index: i.value,
     });
   }
-  const draggableStatus = {
-    status: !postItem.value.isDraggable,
-    index: i.value,
-  };
   emits("change:draggableStatus", draggableStatus);
-  emits("save:post", i.value);
+  if (postItem.value.isDraggable === true) emits("save:post", i.value);
 }
 
 // useDraggable / useElementSize

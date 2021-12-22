@@ -26,3 +26,13 @@ export interface EmitChangeDraggableStatusType {
 export interface EmitSavePostType {
   index: number;
 }
+
+export interface EmitChangeTitle {
+  title: string;
+  index: number;
+}
+
+export interface EmitChangeContents {
+  contents: string;
+  index: number;
+}
