@@ -36,6 +36,11 @@ function matchContents(e: Event) {
   contents.value = target.value;
 }
 
+function emitDeletePost() {
+  console.log(postItem.value._id);
+  emits("delete:post", postItem.value._id);
+}
+
 // 현재 title이 props로 받은 title과 다르다면 emit
 function emitChangeTitle() {
   const titleData = {
@@ -165,10 +170,7 @@ function onMouseLeave(el: HTMLDivElement | undefined) {
             {{ title }}
           </h1>
           <div ref="btnGroupDraggable" class="post__btnGroup hidden">
-            <i
-              class="far fa-trash-alt"
-              @click="$emit('delete:post', postItem._id)"
-            ></i>
+            <i class="far fa-trash-alt" @click="emitDeletePost"></i>
           </div>
         </div>
         <hr />
