@@ -49,9 +49,9 @@ export interface PostDataType {
 }
 
 export interface PostItemType extends PostDataType {
-  createdAt: string;
-  createdBy: string;
-  updatedAt: string;
-  __v: number;
-  _id: string;
+  createdAt?: string;
+  createdBy?: string;
+  updatedAt?: string;
+  __v?: number;
+  _id?: string;
 }

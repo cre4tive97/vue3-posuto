@@ -3,31 +3,46 @@ import { useDraggable, useElementSize } from "@vueuse/core";
 import { ref, toRefs } from "vue";
 import { PostItemType } from "@/types/props";
 
+// Props
 const props = defineProps<{
   postItem: PostItemType;
   i: number;
 }>();
 const { postItem, i } = toRefs(props);
+// Emits
 const emits = defineEmits([
   "change:size",
   "change:position",
   "focus:z-index",
   "delete:post",
   "change:draggableStatus",
+  "save:post",
 ]);
 
+// State
+const title = ref(postItem.value.title);
+const contents = ref(postItem.value.contents);
+
+function matchTitle(e: Event) {
+  title.value = e.target.value;
+}
+function matchContents(e: Event) {
+  contents.value = e.target.value;
+}
+
+// Draggable 토글
 function setDraggable() {
   if (postItem.value.isDraggable) {
     emits("change:position", {
       x: x.value,
       y: y.value,
-      index: props.i,
+      index: i.value,
     });
   } else {
     emits("change:size", {
       width: sizeWidth.value,
       height: sizeHeight.value,
-      index: props.i,
+      index: i.value,
     });
   }
   const draggableStatus = {
@@ -35,7 +50,10 @@ function setDraggable() {
     index: i.value,
   };
   emits("change:draggableStatus", draggableStatus);
+  emits("save:post", i.value);
 }
+
+// useDraggable / useElementSize
 const postDraggableElement = ref<HTMLElement | null>(null);
 const postSizeElement = ref<HTMLElement | null>(null);
 const { width: sizeWidth, height: sizeHeight } =
@@ -47,12 +65,14 @@ const { x, y, style } = useDraggable(postDraggableElement, {
     x: postItem.value.position.x,
     y: postItem.value.position.y,
   },
+  // 클릭한 엘레먼트의 z-index를 최상위로 올림
   onStart: () => {
     emits("focus:z-index", {
       z: 2,
       index: i.value,
     });
   },
+  // 드래그 종료시 position 값을 emit
   onEnd: () => {
     if (
       x.value !== postItem.value.position.x ||
@@ -95,7 +115,7 @@ function onMouseLeave(el: HTMLDivElement | undefined) {
       <div class="post__draggable">
         <div class="post__header">
           <h1>
-            {{ postItem.title }}
+            {{ title }}
           </h1>
           <div ref="btnGroupDraggable" class="post__btnGroup hidden">
             <i
@@ -106,7 +126,7 @@ function onMouseLeave(el: HTMLDivElement | undefined) {
         </div>
         <hr />
         <div class="post__content">
-          {{ postItem.contents }}
+          {{ contents }}
         </div>
       </div>
     </div>
@@ -130,7 +150,8 @@ function onMouseLeave(el: HTMLDivElement | undefined) {
               class="post__input"
               type="text"
               placeholder="제목을 입력하세요"
-              :value="postItem.title"
+              :value="title"
+              @input="matchTitle($event)"
             />
           </form>
           <div ref="btnGroupSizable" class="post__btnGroup hidden">
@@ -146,8 +167,9 @@ function onMouseLeave(el: HTMLDivElement | undefined) {
             <textarea
               class="post__textarea"
               style="height: 100%"
-              :value="postItem.contents"
+              :value="contents"
               placeholder="내용을 입력하세요"
+              @input="matchContents($event)"
             ></textarea>
           </form>
         </div>

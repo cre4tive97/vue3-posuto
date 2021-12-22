@@ -2,7 +2,12 @@
 import PostListView from "@/components/PostListView.vue";
 import AppSetting from "@/components/common/AppSetting.vue";
 import Spinner from "@/components/common/Spinner.vue";
-import { getPostData, addPostData, deletePostData } from "@/api/posts";
+import {
+  getPostData,
+  addPostData,
+  deletePostData,
+  updatePostData,
+} from "@/api/posts";
 import { ref } from "vue";
 import { useRouter } from "vue-router";
 import { useStore } from "@/store";
@@ -12,15 +17,18 @@ import {
   EmitSizeType,
   EmitZIndexType,
 } from "@/types/emits";
-import { PostDataType } from "@/types/types";
+import { PostItemType } from "@/types/types";
 import { MutationTypes } from "@/store/mutations";
 import axios from "axios";
 
+// Router & Store
 const router = useRouter();
 const store = useStore();
+
+// State
 const settingState = ref(false);
 const isLoading = ref(false);
-const postItems = ref<PostDataType[]>([]);
+const postItems = ref<PostItemType[]>([]);
 
 function saveSize(emitSize: EmitSizeType) {
   postItems.value[emitSize.index].position.width = emitSize.width;
@@ -40,6 +48,11 @@ function setZIndex(emitZIndex: EmitZIndexType) {
 function initZIndex() {
   postItems.value.forEach((item) => (item.position.z = 1));
 }
+
+// created
+fetchPostData();
+
+// Logic
 
 // PostItems 비어있고, localStorage에 'access'가 없다면, 디폴트 포스트를 생성
 async function createFirstAccessDefaultPost() {
@@ -68,8 +81,6 @@ async function createFirstAccessDefaultPost() {
     });
   }
 }
-// created
-fetchPostData();
 
 // 메인페이지 최초 접속시 localStorage에 기록 남김
 function setAccessRecord() {
@@ -79,6 +90,11 @@ function setAccessRecord() {
 function postItemsEmptyCheck() {
   if (postItems.value.length === 0)
     store.commit(MutationTypes.SET_POST_EMPTY_STATUS, true);
+}
+
+// 드래그 가능 토글
+function toggleDraggableStatus(draggableStatus: EmitChangeDraggableStatusType) {
+  postItems.value[draggableStatus.index].isDraggable = draggableStatus.status;
 }
 
 // 전체 포스트 조회
@@ -105,8 +121,8 @@ async function createNewPost() {
   try {
     // 디폴트 포스트를 생성
     await addPostData({
-      title: "",
-      contents: "",
+      title: "test",
+      contents: "test",
       position: { width: 300, height: 300, x: 100, y: 100, z: 1 },
       isDraggable: false,
     });
@@ -139,9 +155,25 @@ async function deletePost(postId: string) {
     }
   }
 }
-// 드래그 가능 토글
-function toggleDraggableStatus(draggableStatus: EmitChangeDraggableStatusType) {
-  postItems.value[draggableStatus.index].isDraggable = draggableStatus.status;
+
+// 포스트 수정
+async function editPost(i: number) {
+  const postData = postItems.value[i];
+  try {
+    console.log(postData);
+    if (postData._id) await updatePostData(postData._id, postData);
+    fetchPostData();
+  } catch (error) {
+    if (axios.isAxiosError(error) && error.response?.status === 400) {
+      alert("이미 같은 포스트가 존재합니다.");
+    } else if (axios.isAxiosError(error) && error.response?.status === 404) {
+      alert("포스트를 찾을 수 없습니다.");
+    } else if (axios.isAxiosError(error) && error.response?.status === 500) {
+      alert(
+        "서버에 문제가 있어 포스트를 수정하지 못했습니다. 잠시 후 다시 시도해주세요."
+      );
+    }
+  }
 }
 </script>
 <template>
@@ -153,6 +185,7 @@ function toggleDraggableStatus(draggableStatus: EmitChangeDraggableStatusType) {
     @focus:z-index="setZIndex"
     @delete:post="deletePost"
     @change:draggableStatus="toggleDraggableStatus"
+    @save:post="editPost"
   />
   <transition name="settingAnimation">
     <AppSetting v-if="settingState" />

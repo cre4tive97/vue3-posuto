@@ -22,3 +22,7 @@ export interface EmitChangeDraggableStatusType {
   status: boolean;
   index: number;
 }
+
+export interface EmitSavePostType {
+  index: number;
+}

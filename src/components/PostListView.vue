@@ -8,21 +8,24 @@ import {
   EmitZIndexType,
   EmitIdType,
   EmitChangeDraggableStatusType,
+  EmitSavePostType,
 } from "@/types/emits";
 
+// Props
 const props = defineProps<{
   postItems: PostItemType[];
 }>();
+const { postItems } = toRefs(props);
 
+// Emits
 const emits = defineEmits([
   "change:size",
   "change:position",
   "focus:z-index",
   "delete:post",
   "change:draggableStatus",
+  "save:post",
 ]);
-
-const { postItems } = toRefs(props);
 
 function emitChangeSize(size: EmitSizeType) {
   emits("change:size", size);
@@ -41,6 +44,9 @@ function emitChangeDraggableStatus(
 ) {
   emits("change:draggableStatus", draggableStatus);
 }
+function emitSavePost(index: EmitSavePostType) {
+  emits("save:post", index);
+}
 </script>
 
 <template>
@@ -55,6 +61,7 @@ function emitChangeDraggableStatus(
       @focus:z-index="emitFocusZIndex"
       @delete:post="emitDeletePost"
       @change:draggableStatus="emitChangeDraggableStatus"
+      @save:post="emitSavePost"
     />
   </div>
 </template>
