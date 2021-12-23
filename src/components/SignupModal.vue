@@ -1,8 +1,8 @@
 <script lang="ts" setup>
 import { toRefs } from "vue";
-import { SignupModalProps } from "@/types/props";
 
-const props = defineProps<SignupModalProps>();
+// const props = defineProps<SignupModalProps>();
+const props = defineProps<{ nickname: string }>();
 const { nickname } = toRefs(props);
 </script>
 

@@ -33,6 +33,7 @@ const router = createRouter({
 });
 
 router.beforeEach((to, from, next) => {
+  console.log(to.meta.auth);
   if (to.meta.auth && !store.getters.isLogin) {
     next("/login");
     return;
