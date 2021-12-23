@@ -1,7 +1,12 @@
 <script lang="ts" setup>
 import { useDraggable, useElementSize } from "@vueuse/core";
-import { ref, toRefs } from "vue";
+import { ref, toRefs, computed } from "vue";
 import { PostItemType } from "@/types/props";
+import { useStore } from "@/store/index";
+
+// Store
+const store = useStore();
+const postColor = computed(() => store.state.postColor);
 
 // Props
 const props = defineProps<{
@@ -166,7 +171,7 @@ function onMouseLeave(el: HTMLDivElement | undefined) {
       ref="postDraggableElement"
       :style="
         style +
-        `width:${postItem.position.width}px; height:${postItem.position.height}px; z-index:${postItem.position.z}`
+        `width:${postItem.position.width}px; height:${postItem.position.height}px; z-index:${postItem.position.z}; background-color:${postColor};`
       "
       style="position: fixed"
       @dblclick="setDraggable"
@@ -194,7 +199,7 @@ function onMouseLeave(el: HTMLDivElement | undefined) {
       class="post__item resizable"
       :style="
         style +
-        `width:${postItem.position.width}px; height:${postItem.position.height}px; z-index:${postItem.position.z}`
+        `width:${postItem.position.width}px; height:${postItem.position.height}px; z-index:${postItem.position.z}; background-color:${postColor};`
       "
       style="position: fixed; opacity: 0.7"
       @dblclick="setDraggable"
