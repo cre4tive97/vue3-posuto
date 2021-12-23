@@ -22,7 +22,7 @@ const routes: Array<RouteRecordRaw> = [
     meta: { auth: true },
   },
   {
-    path: "/*",
+    path: "/:pathMatch(.*)",
     component: () => import("@/views/NotFoundPage.vue"),
   },
 ];
@@ -33,7 +33,6 @@ const router = createRouter({
 });
 
 router.beforeEach((to, from, next) => {
-  console.log(to.meta.auth);
   if (to.meta.auth && !store.getters.isLogin) {
     next("/login");
     return;
