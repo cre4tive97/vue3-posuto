@@ -24,6 +24,7 @@ const emits = defineEmits([
 // State
 const title = ref(postItem.value.title);
 const contents = ref(postItem.value.contents);
+const currentZIndex = ref(postItem.value.position.z);
 
 // title state와 title input value 일치화
 function matchTitle(e: Event) {
@@ -137,6 +138,12 @@ const { x, y, style } = useDraggable(postDraggableElement, {
       // props 변경 후 emit
       emits("save:post", i.value);
     }
+    if (postItem.value.position.z === 2) {
+      emits("focus:z-index", {
+        z: 1,
+        index: i.value,
+      });
+    }
   },
 });
 const btnGroupDraggable = ref<HTMLDivElement>();
@@ -160,7 +167,7 @@ function onMouseLeave(el: HTMLDivElement | undefined) {
       ref="postDraggableElement"
       :style="
         style +
-        `width:${postItem.position.width}px; height:${postItem.position.height}px; z-index:${postItem.position.z}`
+        `width:${postItem.position.width}px; height:${postItem.position.height}px; z-index:${currentZIndex}`
       "
       style="position: fixed"
       @dblclick="setDraggable"
@@ -188,7 +195,7 @@ function onMouseLeave(el: HTMLDivElement | undefined) {
       class="post__item resizable"
       :style="
         style +
-        `width:${postItem.position.width}px; height:${postItem.position.height}px; z-index:${postItem.position.z}`
+        `width:${postItem.position.width}px; height:${postItem.position.height}px; z-index:${currentZIndex}`
       "
       style="position: fixed; opacity: 0.7"
       @dblclick="setDraggable"

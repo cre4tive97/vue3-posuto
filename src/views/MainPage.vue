@@ -172,6 +172,7 @@ async function deletePost(_id: EmitIdType) {
 
 // 포스트 수정
 async function editPost(i: number) {
+  // postItems.value[i].position.z = 1;
   const postData = postItems.value[i];
   try {
     if (postData._id) await updatePostData(postData._id, postData);
