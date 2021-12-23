@@ -24,7 +24,6 @@ const emits = defineEmits([
 // State
 const title = ref(postItem.value.title);
 const contents = ref(postItem.value.contents);
-const currentZIndex = ref(postItem.value.position.z);
 
 // title state와 title input value 일치화
 function matchTitle(e: Event) {
@@ -167,7 +166,7 @@ function onMouseLeave(el: HTMLDivElement | undefined) {
       ref="postDraggableElement"
       :style="
         style +
-        `width:${postItem.position.width}px; height:${postItem.position.height}px; z-index:${currentZIndex}`
+        `width:${postItem.position.width}px; height:${postItem.position.height}px; z-index:${postItem.position.z}`
       "
       style="position: fixed"
       @dblclick="setDraggable"
@@ -195,7 +194,7 @@ function onMouseLeave(el: HTMLDivElement | undefined) {
       class="post__item resizable"
       :style="
         style +
-        `width:${postItem.position.width}px; height:${postItem.position.height}px; z-index:${currentZIndex}`
+        `width:${postItem.position.width}px; height:${postItem.position.height}px; z-index:${postItem.position.z}`
       "
       style="position: fixed; opacity: 0.7"
       @dblclick="setDraggable"

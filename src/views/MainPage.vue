@@ -172,10 +172,11 @@ async function deletePost(_id: EmitIdType) {
 
 // 포스트 수정
 async function editPost(i: number) {
-  // postItems.value[i].position.z = 1;
+  postItems.value[i].position.z = 1;
   const postData = postItems.value[i];
   try {
     if (postData._id) await updatePostData(postData._id, postData);
+    postItems.value[i].position.z = 2;
   } catch (error) {
     if (axios.isAxiosError(error) && error.response?.status === 400) {
       alert("이미 같은 포스트가 존재합니다.");
