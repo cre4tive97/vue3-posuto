@@ -20,3 +20,7 @@ export interface PostItemType {
   createdBy?: string;
   updatedAt?: string;
 }
+
+export interface SignupModalProps {
+  nickname: string;
+}

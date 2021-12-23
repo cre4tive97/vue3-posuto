@@ -136,7 +136,7 @@ async function createNewPost() {
       position: { width: 300, height: 300, x: 100, y: 100, z: 1 },
       isDraggable: false,
     });
-    await fetchPostData();
+    fetchPostData();
   } catch (error) {
     if (axios.isAxiosError(error) && error.response?.status === 400) {
       alert("새로운 포스트가 이미 존재합니다.");
@@ -152,10 +152,11 @@ async function createNewPost() {
 async function deletePost(_id: EmitIdType) {
   try {
     if (_id) await deletePostData(_id);
-    postItems.value = postItems.value.filter((item) => {
+    const newPostItems = postItems.value.filter((item) => {
       return item._id !== _id;
     });
-    await fetchPostData();
+    postItems.value = newPostItems;
+    fetchPostData();
   } catch (error) {
     if (axios.isAxiosError(error) && error.response?.status === 400) {
       alert("포스트를 삭제할 수 없습니다.");

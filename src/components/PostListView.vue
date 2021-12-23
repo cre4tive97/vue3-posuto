@@ -63,7 +63,7 @@ function emitChangeContents(contentsData: EmitChangeContents) {
   <div class="post__container">
     <PostItem
       v-for="(postItem, i) in postItems"
-      :key="i"
+      :key="postItem._id"
       :postItem="postItem"
       :i="i"
       @change:size="emitChangeSize"

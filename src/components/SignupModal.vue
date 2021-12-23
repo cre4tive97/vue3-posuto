@@ -1,10 +1,9 @@
 <script lang="ts" setup>
-interface Props {
-  nickname?: string;
-}
-const props = withDefaults(defineProps<Props>(), {
-  nickname: "nickname",
-});
+import { toRefs } from "vue";
+import { SignupModalProps } from "@/types/props";
+
+const props = defineProps<SignupModalProps>();
+const { nickname } = toRefs(props);
 </script>
 
 <template>
@@ -12,8 +11,8 @@ const props = withDefaults(defineProps<Props>(), {
     <div class="modal__white">
       <h1 class="modal__greeting">회원 가입을 축하합니다!</h1>
       <span class="modal__text"
-        ><em style="font-size: 1.25rem">{{ props.nickname }} </em>님, Posuto를
-        마음껏 이용해보세요!😆</span
+        ><em style="font-size: 1.25rem">{{ nickname }} </em>님, Posuto를 마음껏
+        이용해보세요!😆</span
       >
       <button @click="$router.push('/login')" class="btn">Get Started</button>
     </div>

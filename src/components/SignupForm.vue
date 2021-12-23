@@ -4,6 +4,7 @@ import SignupModal from "@/components/SignupModal.vue";
 import { SignupSuccess } from "@/types/types";
 import { validateUsername } from "@/utils/validation";
 import { registerUser } from "@/api/auth";
+import axios from "axios";
 
 //form data
 const username = ref("");
@@ -24,10 +25,12 @@ async function submitForm() {
       nickname: nickname.value,
     });
     showSignupModal(data);
-  } catch (error: any) {
-    if (error.response?.status === 409) {
+  } catch (error) {
+    if (axios.isAxiosError(error) && error.response?.status === 409) {
       alert("이미 사용중인 Username 입니다!");
     }
+  } finally {
+    initForm();
   }
 }
 function initForm() {
